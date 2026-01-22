@@ -1,0 +1,67 @@
+@use "tailwindcss/base.css";
+@use "tailwindcss/components.css";
+@use "tailwindcss/utilities.css";
+@use "variables";
+@use "fonts";
+@use "mainTable";
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  transition:
+          color 0.5s,
+          background-color 0.5s;
+  font-family: Lexend, Cairo, sans-serif !important;
+  background-color: rgba(var(--dashboardBg));
+}
+
+:root {
+  font-size: 14px;
+  overflow-x: hidden;
+}
+
+@media (min-width: 300px) {
+  :root {
+    font-size: 12px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1536px) {
+  :root {
+    font-size: 14px !important;
+  }
+}
+
+@media (min-width: 1537px) {
+  :root {
+    font-size: 16px !important;
+  }
+}
+
+.main-m-section {
+  margin: 40px 0;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+body .scrollbar-track.scrollbar-track-y {
+  background-color: theme('colors.black / 10%');
+}
+
+body .scrollbar-track.scrollbar-track-y .scrollbar-thumb.scrollbar-thumb-y {
+  background-color: theme('colors.primary.700 / 50%');
+}
