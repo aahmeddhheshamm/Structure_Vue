@@ -1,3 +1,36 @@
 {
-  "language": "عربي"
+  "language": "عربي",
+  "fields": {
+    "email": "البريد الإلكتروني",
+    "enterEmail": "ادخل البريد الإلكتروني",
+
+    "password": "كلمة المرور",
+    "enterPassword": "ادخل كلمة المرور",
+
+    "newPassword": "كلمة المرور الجديدة",
+    "enterNewPassword": "ادخل كلمة المرور الجديدة",
+
+    "confirmPassword": "تأكيد كلمة المرور",
+    "enterConfirmPassword": "ادخل كلمة المرور مرة اخري",
+
+    "name": "الإسم",
+    "enterName": "ادخل الاسم",
+
+    "phone": "رقم الجوال",
+    "enterPhone": "ادخل رقم الجوال"
+
+  },
+  "validations": {
+    "required": "{field} مطلوب",
+    "email": "ادخل البريد اﻹلكتروني بطريقة صحيحة"
+  },
+  "buttons": {
+    "login": "تسجيل الدخول",
+    "register": "انشاء حساب جديد"
+  },
+  "auth": {
+    "forgotPassword": "هل نسيت كلمة المرور؟"
+  },
+  "myProfile": "ملفي الشخصي",
+  "logout": "تسجيل الخروج"
 }

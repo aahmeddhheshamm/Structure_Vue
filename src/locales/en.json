@@ -1,3 +1,36 @@
 {
-  "language": "English"
+  "language": "English",
+  "fields": {
+    "email": "Email address",
+    "enterEmail": "Enter email address",
+
+    "password": "Password",
+    "enterPassword": "Enter Password",
+
+    "newPassword": "New password",
+    "enterNewPassword": "Enter new password",
+
+    "confirmPassword": "Confirm password",
+    "enterConfirmPassword": "Enter confirm password ",
+
+    "name": "Name",
+    "enterName": "Enter mame",
+
+    "phone": "Phone number",
+    "enterPhone": "Enter phone number"
+
+  },
+  "validations": {
+    "required": "{field} required",
+    "email": "Enter valid email address"
+  },
+  "buttons": {
+    "login": "Login",
+    "register": "Register"
+  },
+  "auth": {
+    "forgotPassword": "Forgot password?"
+  },
+  "myProfile": "My profile",
+  "logout": "Logout"
 }

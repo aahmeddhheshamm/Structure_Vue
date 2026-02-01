@@ -4,7 +4,7 @@ import ToastPlugin from './toast';
 import PrimeVue from 'primevue/config'
 
 import Aura from '@primevue/themes/aura'
-// import i18n from '@plugins/i18n'
+import i18n from '@/plugins/i18n'
 
 export function globalPlugins(app: App<Element>) {
   app.use(PrimeVue, {
@@ -15,6 +15,7 @@ export function globalPlugins(app: App<Element>) {
       }
     }
   })
+  app.use(i18n)
   app.use(ToastPlugin,{
     autoClose: 3000,
     position: 'top-center',

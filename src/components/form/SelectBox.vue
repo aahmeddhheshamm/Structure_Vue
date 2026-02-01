@@ -1,36 +1,54 @@
 <template>
   <div>
-    <label>
-      <span
-          class="flex gap-1 items-center ltr:text-[14px] rtl:text-[16px] leading-normal text-bsTextGray-900 mb-[8px] font-medium ltr:min-h-[24px]"
-          v-if="label"
-      >
-        <span> {{ label }}</span>
-        <span class="text-danger text-[16px]" v-if="required && !disabled && !readonly">*</span>
+    <label :for="inputId" v-if="label">
+      <span class="flex gap-1 items-center mb-1 font-medium text-black/80">
+        <span class="text-sm">{{ label }}</span>
+        <span v-if="required && !disabled" class="text-errors-100">*</span>
       </span>
-      <Select
-          v-model="value"
-          :filter="filter"
-          :empty-filter-message="$t('dropDown.noResults')"
-          :empty-message="$t('dropDown.noAvailableOptions')"
-          :options="options"
-          :option-value="optionValue"
-          :optionLabel="optionLabel"
-          :placeholder="placeholder"
-          :highlightOnSelect="highlightOnSelect"
-          class="px-[12px] py-1.5 w-full font-medium text-sm !rounded-[4px]"
-          :class="{ '!border-danger is-invalid': errorMessage }"
-          @blur="handleBlur($event, true)"
-          @update:modelValue="handleChange"
-          :disabled="disabled"
-          showClear
-      />
     </label>
-    <div class="min-h-[32px] py-[8px] min-w[1px] overflow-hidden">
+
+    <!-- MULTI -->
+    <MultiSelect
+        v-if="multi"
+        v-model="value"
+        :options="options"
+        :option-value="optionValue"
+        :optionLabel="optionLabel"
+        :placeholder="placeholder"
+        :filter="filter"
+        :disabled="disabled"
+        :loading="loading"
+        display="chip"
+        :inputId="inputId"
+        class="w-full text-sm"
+        :class="{ 'is-invalid': errorMessage }"
+        @blur="handleBlur($event, true)"
+        @update:modelValue="handleChange"
+    />
+
+    <!-- SINGLE -->
+    <Dropdown
+        v-else
+        v-model="value"
+        :options="options"
+        :option-value="optionValue"
+        :optionLabel="optionLabel"
+        :placeholder="placeholder"
+        :filter="filter"
+        :disabled="disabled"
+        :loading="loading"
+        :inputId="inputId"
+        class="w-full text-sm"
+        :class="{ 'is-invalid': errorMessage }"
+        @blur="handleBlur($event, true)"
+        @update:modelValue="handleChange"
+    />
+
+    <div class="min-h-8 py-2 overflow-hidden">
       <Transition name="error" mode="out-in">
         <span
             v-if="errorMessage"
-            class="text-danger block font-normal text-[12px] leading-[16px] break-all text-wrap hyphens-auto"
+            class="text-errors-100 block text-sm leading-4 break-all"
         >
           {{ errorMessage }}
         </span>
@@ -39,80 +57,122 @@
   </div>
 </template>
 
-<script setup>
-import { useField } from 'vee-validate';
-import { onMounted, nextTick } from 'vue';
+<script setup lang="ts">
+import { useField } from 'vee-validate'
+import { ref, onMounted, watch, computed } from 'vue'
+import useFetch from '@/composables/useFetch'
+import InterceptorHelper from '@/InterceptorHelper'
 
-const props = defineProps({
-  name: {
-    type: String,
-    required: true
-  },
-  filter: {
-    type: Boolean,
-    required: false,
-    default: true
-  },
-  highlightOnSelect: {
-    type: Boolean,
-    required: false,
-    default: true
-  },
-  options: {
-    required: true,
-    default: []
-  },
-  placeholder: {
-    type: String,
-    required: true
-  },
-  label: {
-    type: String,
-    required: false
-  },
-  required: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  readonly: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  disabled: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  optionValue: {
-    type: String,
-    required: false,
-    default: 'optionValue'
-  },
-  optionLabel: {
-    type: String,
-    required: false,
-    default: 'optionLabel'
-  },
-});
+defineOptions({
+  inheritAttrs: false
+})
 
-const { value, errorMessage, handleChange, handleBlur, setValue } = useField(props.name, undefined);
+type Option = Record<string, any>
 
-onMounted(async () => {
-  await nextTick();
-  if (!!props.options && Array.isArray(props.options) && !!props.options?.length) {
-    if (value.value) {
-      const findValue = props.options.find((option) => option[props.optionValue] === value.value);
-      if (!findValue) {
-        setValue(null, false);
-      }
-    }
-  }
-});
-</script>
-<!-- <style>
-.p-select-dropdown {
-  padding:0 20px !important;
+type Props = {
+  name: string
+  multi?: boolean
+  fetchOptionsUrl?: string
+  optionValue: string
+  optionLabel: string
+  placeholder: string
+
+  label?: string
+  filter?: boolean
+  required?: boolean
+  readonly?: boolean
+  disabled?: boolean
+
+  staticOptions?: Option[]
+  optionalParams?: Record<string, any>
 }
-</style> -->
+
+const props = withDefaults(defineProps<Props>(), {
+  multi: true,
+  filter: false,
+  staticOptions: () => []
+})
+
+const {
+  value,
+  errorMessage,
+  handleChange,
+  handleBlur,
+  setValue
+} = useField<any>(props.name)
+
+const inputId = computed(() => `select.${props.name}`)
+const options = ref<Option[]>([])
+const loading = ref(false)
+
+watch(
+    () => props.multi,
+    (isMulti) => {
+      if (isMulti && !Array.isArray(value.value)) {
+        setValue(value.value ? [value.value] : [], false)
+      }
+
+      if (!isMulti && Array.isArray(value.value)) {
+        setValue(value.value[0] ?? null, false)
+      }
+    },
+    { immediate: true }
+)
+
+function syncValuesWithOptions() {
+  if (!props.multi || !Array.isArray(value.value)) return
+
+  const validIds = options.value.map(
+      (o) => o[props.optionValue]
+  )
+
+  setValue(
+      value.value.filter((v) => validIds.includes(v)),
+      false
+  )
+}
+
+async function fetchRemoteOptions() {
+  if (!props.fetchOptionsUrl) return
+
+  loading.value = true
+
+  const { data, isLoading, isSuccess } = useFetch({
+    queryKey: ['select_box', props.fetchOptionsUrl, props.optionalParams],
+    queryFn: () =>
+        InterceptorHelper.intercept(
+            props.fetchOptionsUrl!,
+            undefined,
+            props.optionalParams
+        )
+  })
+
+  loading.value = isLoading.value
+
+  if (isSuccess.value && Array.isArray(data.value?.data)) {
+    options.value = data.value.data
+    syncValuesWithOptions()
+  }
+}
+
+async function resolveOptions() {
+  options.value = []
+
+  if (props.staticOptions?.length) {
+    options.value = [...props.staticOptions]
+    syncValuesWithOptions()
+    return
+  }
+
+  await fetchRemoteOptions()
+}
+
+onMounted(resolveOptions)
+
+watch(
+    () => [props.staticOptions, props.optionalParams],
+    resolveOptions,
+    { deep: true }
+)
+</script>
+

@@ -1,0 +1,7 @@
+{
+  "globals": {
+    "getTranslation": true,
+    "interceptor": true,
+    "toast": true
+  }
+}

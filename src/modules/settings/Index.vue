@@ -5,9 +5,10 @@ import ProductsFilterForm from "@/modules/settings/components/ProductsFilterForm
 import {ref} from "vue";
 
 const filters = ref({
-  translations__level: "",
-  translations__scope: "",
+  title: "",
   active: "",
+  category: "",
+  sub_categories: "",
 });
 const { fields, actions, sampleData } = useProductsFields()
 
@@ -18,6 +19,7 @@ const { fields, actions, sampleData } = useProductsFields()
       title="Courses"
       :columns="fields"
       :items="sampleData"
+      :actions="actions"
       :has-count-circle="true"
       :has-filter-btn="true"
       action-btn-title="New Course"

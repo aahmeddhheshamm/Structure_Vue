@@ -1,6 +1,7 @@
 @use "tailwindcss/base.css";
 @use "tailwindcss/components.css";
 @use "tailwindcss/utilities.css";
+@use "primevue";
 @use "variables";
 @use "fonts";
 @use "mainTable";
@@ -50,18 +51,39 @@ body {
   }
 }
 
-.main-m-section {
-  margin: 40px 0;
-}
-
-body.modal-open {
-  overflow: hidden;
-}
-
 body .scrollbar-track.scrollbar-track-y {
   background-color: theme('colors.black / 10%');
 }
 
 body .scrollbar-track.scrollbar-track-y .scrollbar-thumb.scrollbar-thumb-y {
   background-color: theme('colors.primary.700 / 50%');
+}
+
+
+
+
+.headlessui-menu-body {
+  --box-shadow-val: 0px 0px 30px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: var(--box-shadow-val);
+  -webkit-box-shadow: var(--box-shadow-val);
+  -o-box-shadow: var(--box-shadow-val);
+  box-shadow: var(--box-shadow-val);
+  @apply absolute z-10 bg-white rounded-[0.475rem] top-[90%] end-4 w-[150px] py-4
+}
+
+.headlessui-menu-body-mode {
+  @apply w-fit
+}
+
+.table-headlessui-menu-body {
+  @apply top-[190%] md:top-[140%] start-[-50%] md:start-[revert] md:end-1
+}
+
+.headlessui-menu-item {
+  transition: color 0.2s ease;
+  @apply px-6 py-[0.65rem] text-base text-neutral-500 text-nowrap
+}
+
+.headlessui-menu-item::-webkit-scrollbar {
+  display: none;
 }

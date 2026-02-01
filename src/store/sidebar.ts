@@ -7,6 +7,7 @@ export const useSidebarStore = defineStore("sidebar", {
 
   actions: {
     openMobileSidebar() {
+      console.log('openMobileSidebar');
       this.isMobileSidebarOpen = true;  // Open mobile sidebar
     },
 

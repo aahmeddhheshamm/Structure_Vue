@@ -1,29 +1,15 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia"
-import { defineAsyncComponent, onMounted } from "vue"
-import { useI18n } from "vue-i18n"
-import { useLocaleStore } from "./store/locale"
-
-
-const { locale } = useI18n()
-const { currentLocale } = storeToRefs(useLocaleStore())
-
-
-
-onMounted(async () => {
-  locale.value = currentLocale.value.lang
-})
-
 </script>
 
 <template>
+  <main>
+
   <transition name="fade" mode="out-in">
     <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
         <component :is="Component" />
-      </transition>
     </router-view>
   </transition>
+  </main>
 </template>
 
 <style scoped>

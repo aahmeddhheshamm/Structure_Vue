@@ -14,6 +14,10 @@ export default [
         ]
     },
     {
+        path: '', // Default route
+        redirect: { name: 'home' }
+    },
+    {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: () => import('../NotFound.vue'),

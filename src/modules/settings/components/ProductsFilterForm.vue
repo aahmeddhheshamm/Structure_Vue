@@ -1,31 +1,32 @@
 <script setup lang="ts">
-import InputText from '@/components/form/InputText.vue'
-// import SelectBox from '@/components/form/SelectBox.vue'
-import ToggleSwitch from '@/components/form/ToggleSwitch.vue'
+import InputTextField from '@/components/form/InputTextField.vue'
 import { useForm } from 'vee-validate'
-import { ref, watchEffect } from 'vue'
-import ClearFilters from '@/components/buttons/ClearFilters.vue'
+import {ref, watchEffect} from 'vue'
+import ToggleSwitchButton from "@/components/form/ToggleSwitchButton.vue";
+import SelectBox from "@/components/form/SelectBox.vue";
+import ClearFilters from "@/components/buttons/ClearFilters.vue";
+import CheckBoxField from "@/components/form/CheckBoxField.vue";
+import DatePickerField from "@/components/form/DatePickerField.vue";
 
 defineProps<{
   filters: {
-    translations__level: string
-    translations__scope: string
+    title: string
     active: string
+    category: string
+    sub_categories: string
   }
 }>()
 
-const levelFilter = ref('')
-const active = ref(null)
-const scope = ref('')
-
-const { resetForm } = useForm({
+const { values, resetForm } = useForm({
   keepValuesOnUnmount: true,
   initialValues: {
-    translations__level: '',
-    translations__scope: '',
-    active: ''
+    title: "",
+    active: "",
+    category: "",
+    sub_categories: "",
   }
 })
+
 
 const levels = ref([
   { label: 'beginner', value: 'beginner' },
@@ -34,14 +35,11 @@ const levels = ref([
 ])
 
 const emit = defineEmits(['update:filters', 'hide'])
-//
-// watchEffect(() => {
-//   emit('update:filters', {
-//     translations__level: levelFilter.value,
-//     active: active.value,
-//     translations__scope: scope.value
-//   })
-// })
+
+watchEffect(() => {
+  emit('update:filters', { ...values })
+});
+const test =ref()
 </script>
 
 <template>
@@ -49,47 +47,52 @@ const emit = defineEmits(['update:filters', 'hide'])
     class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] md:flex w-full md:flex-row md:items-center gap-4 md:max-w-full max-w-fit"
     @submit.prevent=""
   >
-<!--    <InputText-->
-<!--      class="self-start"-->
-<!--      name="translations__scope"-->
-<!--      label="Scope"-->
-<!--      placeholder="Write Scope"-->
-<!--      id="translations__scope"-->
-<!--      v-model="scope"-->
-<!--    />-->
-
-<!--    <SelectBox-->
-<!--        v-model="levelFilter"-->
-<!--        :empty-filter-message="$t('dropDown.noResults')"-->
-<!--        :empty-message="$t('dropDown.noAvailableOptions')"-->
-<!--        :options="levels"-->
-<!--        option-value="optionValue"-->
-<!--        optionLabel="optionLabel"-->
-<!--        :placeholder="$t('placeHolders.selectStatus')"-->
-<!--        class="px-[12px] py-1.5 w-full font-medium text-sm !rounded-[4px]"-->
-<!--        inputId="categoryTypesList"-->
-<!--        :highlightOnSelect="true"-->
-<!--        display="chip"-->
-<!--     name="levels"-->
-<!--    />-->
-
-
-    <ToggleSwitch
-      class="md:self-end"
-      name="active"
-      id="course-filter-active-toggle"
-      label="Active"
-      :true-value="true"
-      :false-value="false"
-      v-model="active"
-      @on-change="(value) => (active = value)"
+    <InputTextField
+        name="title"
+        :placeholder="
+            $t('placeHolders.enterFieldEn', {
+              field: $t('fields.name')
+            })
+          "
     />
 
-    <div class="flex gap-1.5 self-end mb-1">
-      <ClearFilters
-        v-if="active === true || active === false || levelFilter || scope"
+    <ToggleSwitchButton name="active" label="test"/>
+
+    <SelectBox
+        name="category"
+        :multi="false"
+        :static-options="levels"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select category"
+    />
+    <SelectBox
+        name="sub_categories"
+        multi
+        :static-options="levels"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select Sub Categories"
+    />
+    <CheckBoxField
+        name="test"
+        :binary="true"
+        label="test"
+    />
+
+    <DatePickerField
+        name="test"
+        showIcon
+        fluid
+        dateFormat="dd/mm/yy"
+        :placeholder="$t('placeHolders.selectFrom')"
+    />
+    <ClearFilters
+        class="self-start mb-1"
+        v-if="values.title || values.active || values.category || values.sub_categories"
         @reset="resetForm"
-      />
-    </div>
+    />
+
+
   </form>
 </template>

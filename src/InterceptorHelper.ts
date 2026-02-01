@@ -67,24 +67,25 @@ export default class InterceptorHelper {
     }
 
     const responseJson = await response.json()
-
         // handle response error
         if (!response.ok) {
           if (responseJson?.data) {
-            if (responseJson.data) {
+            if (responseJson.data?.length) {
               for (const [key, value] of Object.entries(responseJson.data)) {
                 toast.error(value, {
                   position: toast.POSITION.BOTTOM_RIGHT
                 })
               }
-            } else {
+            }
+            else {
               for (const [key, value] of Object.entries(responseJson.errors)) {
                 toast.error(value, {
                   position: toast.POSITION.BOTTOM_RIGHT
                 })
               }
             }
-          } else if (responseJson.message || responseJson.error) {
+          }
+          else if (responseJson.message || responseJson.error) {
             toast.error(responseJson.message || responseJson.error, {
               position: toast.POSITION.BOTTOM_RIGHT
             })

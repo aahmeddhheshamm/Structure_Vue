@@ -1,5 +1,5 @@
 <template>
-  <div class="hs-accordion-group py-8 flex flex-col gap-8 overflow-y-hidden overflow-x-hidden justify-start">
+  <div class="hs-accordion-group py-8 flex flex-col gap-4 overflow-y-hidden overflow-x-hidden justify-start">
     <template v-for="(item, index) in menuItems" :key="`${item.title}_${index}`">
       <div
           class="hs-accordion"
@@ -14,7 +14,7 @@
             class="flex hs-accordion-toggle justify-between items-center px-3 h-10 w-full rounded disabled:pointer-events-none text-black hs-accordion-active:bg-primary-700 hs-accordion-active:text-[#fff]"
             :class="{
             '!w-12 !h-10 transition-all duration-500 bg-neural-200/10': mini,
-            'bg-primary-700 text-white': openAccordion === index || $route.matched.some(({ name }) => name === item.routeName)
+            'bg-primary-700 !text-[#fff]': openAccordion === index || $route.matched.some(({ name }) => name === item.routeName)
           }"
             :aria-expanded="openAccordion === index"
             :aria-controls="`hs-basic-collapse-${item.title}_${index}`"

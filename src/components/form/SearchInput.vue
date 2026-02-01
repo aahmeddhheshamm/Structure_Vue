@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 
 const props = defineProps<{
   isVisible: boolean
@@ -42,7 +41,7 @@ const query = defineModel('query')
         v-bind="$attrs"
         autofocus
         type="text"
-        class="w-full bg-transparent border-none active:border-none focus:outline-none focus:ring-0 placeholder:text-xs placeholder:font-light placeholder:text-black/60 text-primary-700"
+        class="w-full bg-transparent border-0 active:border-0 !focus:border-0 focus:outline-none focus:ring-0 placeholder:text-xs placeholder:font-light placeholder:text-black/60 text-primary-700"
         placeholder="Search"
         v-model.trim="query"
         @input="emit('input')"

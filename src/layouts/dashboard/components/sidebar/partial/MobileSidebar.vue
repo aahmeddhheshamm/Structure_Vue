@@ -1,65 +1,53 @@
-<template>
-  <Teleport to="#modal">
-    <Transition appear name="sidebar">
-      <div
-          v-if="isMobileSidebarOpen"
-          id="mini-sidebar"
-          v-bind="$attrs"
-          class="sidebar-bg-color fixed left-0 top-0 right-0 bottom-0 z-[999] flex justify-end"
-          @click="closeSidebar"
-      >
-        <aside
-            class="bg-white fixed w-[18.875rem] border-e border-black/10 start-0 top-0 h-screen overflow-auto flex flex-col justify-start items-stretch gap-1"
-            @click.stop
-        >
-          <!-- logo -->
-          <div class="h-[70.8px] flex items-center justify-center gap-2 mt-5">
-<!--            <img class="w-[1.5rem]" src="@/assets/images/logo.png" />-->
-            <span class="font-bold text-xl text-black">Masarat</span>
-          </div>
+<script setup>
+import { ref, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import ExitIcon from '@/components/icons/ExitIcon.vue'
 
-          <UserHint class="self-center" name="mobisidebar" />
+const menuIsOpen = ref(false)
+const currentRoute = computed(() => route.path)
+const route = useRoute()
+watch(currentRoute, () => {
+  menuIsOpen.value = false
+})
 
-          <!-- menu -->
-          <div id="mobsidebar-scroll">
-            <div class="px-7 flex flex-col gap-8 overflow-y-auto overflow-x-hidden">
-              <Accordion :mini="false" />
-            </div>
-          </div>
-        </aside>
-      </div>
-    </Transition>
-  </Teleport>
-</template>
+function toggleMenu() {
+  menuIsOpen.value = !menuIsOpen.value
+}
 
-<script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { useSidebarStore } from '@/store/sidebar';
-import UserHint from '../../navbar/partial/UserHint.vue';
-import Accordion from './Accordion.vue';
-
-const { isMobileSidebarOpen } = storeToRefs(useSidebarStore());
-
-const { closeMobileSidebar } = useSidebarStore();
-
-const closeSidebar = () => {
-  closeMobileSidebar();
-};
 </script>
 
+<template>
+  <button type="button" class="block lg:hidden text-gray-500 menu-button-area" @click="toggleMenu">
+    <slot name="buttonContent"></slot>
+  </button>
+  <teleport to="body">
+    <div
+        class="fixed top-0 bottom-0 mobile-menu lg:hidden rtl:left-full ltr:right-full w-[100vw] !h-[100vh] z-[99999] transition-all"
+        :class="{ 'menu-open rtl:!left-0 ltr:!right-0': menuIsOpen }"
+    >
+      <div class="absolute inset-0 bg-black/70" @click="toggleMenu"></div>
+      <div
+          class="absolute top-[22px] end-[30px] z-50 w-[20px] h-[20px] drop-shadow-xl cursor-pointer"
+          @click="toggleMenu"
+      >
+        <ExitIcon />
+      </div>
+      <nav class="flex flex-col relative z-10 w-[300px] h-full pt-4 p-4 bg-white">
+        <div class="h-[70.8px] flex items-center justify-center gap-2">
+          <img class=" w-[6.5rem]" src="@/assets/images/text-logo.svg" />
+        </div>
+        <slot name="sideBarLinks"></slot>
+      </nav>
+    </div>
+  </teleport>
+</template>
+
 <style scoped>
-.sidebar-bg-color {
-  background: rgba(0, 0, 0, 0.3);
+.menu-open {
+  transition: left 0.5s ease-in-out, right 0.5s ease-in-out;
 }
 
-.sidebar-enter-active,
-.sidebar-leave-active {
-  transition: all 0.3s ease;
-}
-
-.sidebar-enter-from,
-.sidebar-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
+.mobile-menu {
+  transition: all 0.5s ease-in-out;
 }
 </style>
