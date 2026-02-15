@@ -11,7 +11,7 @@ import Box from '@/components/UI/Box.vue';
         <p class="font-normal text-black/60 text-base">Page Not Found</p>
       </div>
 
-      <MainButton text="Go Home" @click="$router.push({ name: 'home' })" />
+      <MainButton text="Go Home" @click="$router.push({ name: 'admin-panel' })" />
     </div>
   </Box>
 </template>

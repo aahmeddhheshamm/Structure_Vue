@@ -6,8 +6,6 @@ import './assets/styles/main.scss'
 import App from './App.vue'
 import {globalPlugins} from "./plugins";
 
-
-
 const app = createApp(App)
 
 const pinia = createPinia()

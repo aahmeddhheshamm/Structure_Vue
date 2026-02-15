@@ -31,7 +31,7 @@ const { onSubmit, isPending } = useRegisterForm();
 
     <MainButton
         class="col-span-2 w-full"
-        :text="$t('buttons.register')"
+        text="buttons.register"
         type="submit"
         :loading="isPending"
     />

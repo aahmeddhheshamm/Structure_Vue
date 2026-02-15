@@ -17,7 +17,9 @@
     "enterName": "Enter mame",
 
     "phone": "Phone number",
-    "enterPhone": "Enter phone number"
+    "enterPhone": "Enter phone number",
+
+    "selectDate": "Select Date"
 
   },
   "validations": {
@@ -26,11 +28,40 @@
   },
   "buttons": {
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "addSupplier": "Add Supplier",
+    "addProduct": "Add Product",
+    "filters": "Filters",
+    "clearFilters": "Clear Filters",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "auth": {
+    "headerInfo": "Welcome Back",
+    "descriptionInfo": "Streamline your workflow with our powerful dashboard. Manage projects, track progress, and collaborate with your team effortlessly.",
     "forgotPassword": "Forgot password?"
   },
+  "sidebar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "suppliers": "Suppliers"
+  },
+
+  "status": {
+    "inactive": "Inactive",
+    "active": "Active",
+    "pending": "Pending",
+    "rejected": "Rejected"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "page": "Page",
+    "resultsOf": "results of",
+    "entries": "entries"
+  },
+  "noRecordsFound": "No Records Found",
   "myProfile": "My profile",
   "logout": "Logout"
 }

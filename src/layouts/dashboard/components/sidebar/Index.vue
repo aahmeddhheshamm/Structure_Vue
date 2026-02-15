@@ -14,7 +14,7 @@
     <!-- menu -->
     <div data-scrollbar class="h-[calc(100%-98px)]" id="sidebar-scroll">
       <div
-        class="px-7 flex flex-col gap-8 overflow-y-hidden overflow-x-hidden"
+        class="px-4 flex flex-col gap-8 overflow-y-hidden overflow-x-hidden"
         :class="{ 'items-center': !isExpanded && !isHovered }"
       >
         <AccordionSidebar :mini="!isHovered && !isExpanded" />

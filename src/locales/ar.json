@@ -17,7 +17,9 @@
     "enterName": "ادخل الاسم",
 
     "phone": "رقم الجوال",
-    "enterPhone": "ادخل رقم الجوال"
+    "enterPhone": "ادخل رقم الجوال",
+
+    "selectDate": "اختيار التاريخ"
 
   },
   "validations": {
@@ -26,11 +28,40 @@
   },
   "buttons": {
     "login": "تسجيل الدخول",
-    "register": "انشاء حساب جديد"
+    "register": "انشاء حساب جديد",
+    "addSupplier": "اضافة مورد",
+    "addProduct": "اضافة منتج",
+    "filters": "الفلاتر",
+    "clearFilters": "مسح الفلاتر",
+    "view": "عرض",
+    "edit": "تعديل",
+    "delete": "مسح"
   },
   "auth": {
+    "headerInfo": "مرحبًا بعودتك",
+    "descriptionInfo": "بسّط سير عملك باستخدام لوحة التحكم القوية الخاصة بنا. أدر المشاريع، وتتبع التقدم، وتعاون مع فريقك بكل سهولة.",
     "forgotPassword": "هل نسيت كلمة المرور؟"
   },
+  "sidebar": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "products": "المنتجات",
+    "suppliers": "الموردين"
+  },
+
+  "status": {
+    "inactive": "غير نشط",
+    "active": "نشط",
+    "pending": "قيد الانتظار",
+    "rejected": "مرفوض"
+  },
+  "pagination": {
+    "showing": "عرض",
+    "page": "صفحة",
+    "resultsOf": "نتيجة من أصل",
+    "entries": "إدخال"
+  },
+  "noRecordsFound": "لا توجد بيانات",
   "myProfile": "ملفي الشخصي",
   "logout": "تسجيل الخروج"
 }

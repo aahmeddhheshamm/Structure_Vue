@@ -29,7 +29,7 @@ const { onSubmit, isPending } = useLoginForm();
       </div>
       <MainButton
           class="w-full"
-          :text="$t('buttons.login')"
+          text="buttons.login"
           type="submit"
           :loading="isPending"
       />

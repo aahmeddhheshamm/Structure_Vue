@@ -1,16 +1,28 @@
-<script setup lang="ts">
-</script>
-
 <template>
   <main>
-
-  <transition name="fade" mode="out-in">
     <router-view v-slot="{ Component }">
+  <transition name="fade" mode="out-in">
+
         <component :is="Component" />
-    </router-view>
-  </transition>
+  </transition>    </router-view>
+
   </main>
 </template>
+
+<script setup lang="ts">
+import { useQueryClient } from '@tanstack/vue-query'
+import { watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const queryClient = useQueryClient()
+const { locale } = useI18n()
+
+watch(locale, () => {
+  queryClient.invalidateQueries()
+})
+
+
+</script>
 
 <style scoped>
 .fade-enter-from,

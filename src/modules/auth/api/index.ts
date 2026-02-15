@@ -1,7 +1,8 @@
 import InterceptorHelper from "@/InterceptorHelper.ts";
+import type {ApiLoginRequest, ApiLoginResponse} from "@/types/UserData.ts";
 
-export const apiLogin = (data: any) => {
-    return InterceptorHelper.intercept('admin/auth/login/', {
+export const apiLogin = (data: ApiLoginRequest) => {
+    return InterceptorHelper.intercept<ApiLoginResponse>('auth/login/', {
         method: 'POST',
         body: JSON.stringify(data)
     })

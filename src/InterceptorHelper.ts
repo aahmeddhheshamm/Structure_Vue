@@ -1,23 +1,23 @@
 import { toast } from 'vue3-toastify'
 
 export default class InterceptorHelper {
-  private static baseUrl = import.meta.env.VITE_APP_API_URL
-    ? import.meta.env.VITE_APP_API_URL
-    : '/api/'
+private static baseUrl = import.meta.env.VITE_APP_API_URL
 
   // intercept request
   static async interceptRequest(options: RequestInit = {}): Promise<RequestInit> {
     // get token
     const token = localStorage.getItem('token')
+    const lang = localStorage.getItem('locale')
 
     options.headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      'lang': lang ? lang.toLowerCase() : 'en' ,
       ...options.headers
     }
     if (token) {
       options.headers = {
-        Authorization: `Token ${token}`,
+        Authorization: `Bearer ${token}`,
         ...options.headers
       }
     }

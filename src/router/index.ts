@@ -1,5 +1,5 @@
 import adminRoutes from "../modules/index.routes.ts"
-import authRoutes from "../modules/auth/auth.routes"
+import authRoutes from "../modules/auth/auth.routes.ts"
 import { createRouter, createWebHistory } from "vue-router"
 
 const router = createRouter({

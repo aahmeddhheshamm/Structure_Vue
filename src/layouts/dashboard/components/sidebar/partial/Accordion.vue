@@ -1,6 +1,6 @@
 <template>
   <div class="hs-accordion-group py-8 flex flex-col gap-4 overflow-y-hidden overflow-x-hidden justify-start">
-    <template v-for="(item, index) in menuItems" :key="`${item.title}_${index}`">
+    <template v-for="(item, index) in sidebarItems" :key="`${item.title}_${index}`">
       <div
           class="hs-accordion"
           :class="{
@@ -12,19 +12,19 @@
         <button
             @click="handleItemClick(index, item)"
             class="flex hs-accordion-toggle justify-between items-center px-3 h-10 w-full rounded disabled:pointer-events-none text-black hs-accordion-active:bg-primary-700 hs-accordion-active:text-[#fff]"
+
             :class="{
             '!w-12 !h-10 transition-all duration-500 bg-neural-200/10': mini,
-            'bg-primary-700 !text-[#fff]': openAccordion === index || $route.matched.some(({ name }) => name === item.routeName)
+            'bg-primary-700 !text-[#fff] ': openAccordion === index || $route.matched.some(({ name }) => name === item.routeName)
           }"
             :aria-expanded="openAccordion === index"
             :aria-controls="`hs-basic-collapse-${item.title}_${index}`"
         >
           <div class="flex items-center justify-start gap-2 w-full">
-            <div class="w-6 h-6 flex justify-center items-center">
-              <span v-html="item?.icon" class="item-icon"></span>
-            </div>
+            <!-- Dynamically render icon using icons[item.icon] -->
+            <component :is="icons[item.icon]"  :style="{ fill: isActive(item) ? 'fill-primary-700' : 'currentColor' }" class="" />
             <p class="font-medium w-full text-start" :class="{ hidden: mini }">
-              {{ item.title }}
+              {{ $t(`sidebar.${item.title}`) }}
             </p>
           </div>
           <svg
@@ -58,7 +58,7 @@
             <template v-for="(child, key) in item.children" :key="key">
               <li>
                 <router-link
-                    :to="{ name: child?.link?.name }"
+                    :to="{ name: child?.routeName }"
                     exact-active-class="active-sidebar"
                     class="flex items-center ps-10 w-full h-10 px-3 rounded-md relative z-10 text-neural-300"
                     :class="[
@@ -68,10 +68,9 @@
                   ]"
                 >
                   <div class="flex gap-2 items-center">
-                    <div class="w-6 h-6 flex justify-center items-center">
-                      <span v-html="child.icon"></span>
-                    </div>
-                    <p v-if="!mini" class="text-xs text-nowrap">{{ child.title }}</p>
+                    <!-- Dynamically render child icon using icons[child.icon] -->
+                    <component :is="icons[child.icon]" class="" />
+                    <p v-if="!mini" class="text-xs text-nowrap">{{ $t(`sidebar.${child.title}`) }}</p>
                   </div>
                 </router-link>
               </li>
@@ -83,10 +82,11 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import menuItems from '../sidbar.json'
+import {sidebarItems, icons} from "@/composables/useSideBar.ts";
 
 const props = defineProps({
   item: { type: Object },
@@ -108,7 +108,9 @@ const handleItemClick = (index: number, item: any) => {
     openAccordion.value = openAccordion.value === index ? null : index
   }
 }
-
+const isActive = (item: any) => {
+  return route.matched.some(({ name }) => name === item.routeName);
+}
 </script>
 
 <style scoped>

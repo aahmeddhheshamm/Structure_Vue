@@ -14,7 +14,7 @@
     >
       <main-nav class="sticky top-0 z-10" @collapse="collapseSidebar" />
       <div data-scrollbar id="main-scrollbar" tabindex="-1">
-        <div class="bg-dashboardBg transition-all duration-500 min-h-full">
+        <div class="bg-dashboardBg transition-all duration-500 min-h-screen">
           <suspense>
             <template #default>
               <router-view v-slot="{ Component, route }">
@@ -42,28 +42,9 @@ import MainSidebar from './components/sidebar/Index.vue'
 const { setTheme } = useThemeStore()
 const { currentTheme } = storeToRefs(useThemeStore())
 
-const setCssVariable = (
-    r: HTMLElement | null,
-    property: string,
-    value: string,
-    important = false
-) => {
-  r?.style.setProperty(property, value, important ? 'important' : '')
-}
 
 onMounted(async () => {
   setTheme(currentTheme.value)
-
-  // const root = document.querySelector<HTMLElement>(':root')
-
-  // const storedLocale = JSON.parse(localStorage.getItem('locale')!) || { lang: 'EN', name: 'English', direction: 'ltr', font: 'Lexend' };
-  //
-  // if (storedLocale) {
-  //   setCssVariable(root, '--primary-700', '3, 118, 249', true)
-  //   setCssVariable(root, '--primary-500', '0, 152, 255', true)
-  //   document.body.setAttribute('dir', storedLocale.direction)  // Set body direction (LTR or RTL)
-  //   document.body.style.fontFamily = storedLocale.font  // Apply selected font
-  // }
 })
 
 const isExpanded = ref(false)

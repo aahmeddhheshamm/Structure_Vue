@@ -4,9 +4,9 @@
       <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-90"></div>
       <div class="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
         <div class="max-w-md">
-          <h1 class="text-4xl font-bold mb-6">Welcome Back</h1>
+          <h1 class="text-4xl font-bold mb-6">{{ $t('auth.headerInfo') }}</h1>
           <p class="text-lg text-blue-100">
-            Streamline your workflow with our powerful dashboard. Manage projects, track progress, and collaborate with your team effortlessly.
+            {{ $t('auth.descriptionInfo') }}
           </p>
         </div>
       </div>
@@ -27,7 +27,7 @@
               }"
                 class="flex-1 py-3 px-4 text-center transition-colors duration-200"
             >
-              Login
+              {{ $t('buttons.login') }}
             </button>
             <button
                 @click="goToRegister"
@@ -37,18 +37,18 @@
               }"
                 class="flex-1 py-3 px-4 text-center transition-colors duration-200"
             >
-              Register
+              {{ $t('buttons.register') }}
             </button>
           </div>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow-sm">
+          <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
 
-          <router-view v-slot="{ Component }">
               <component :is="Component" />
-          </router-view>
           </transition>
+          </router-view>
 
         </div>
 

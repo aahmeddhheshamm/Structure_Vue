@@ -1,220 +1,160 @@
 <script setup lang="ts">
-import { defineProps, ref, computed, watch, onMounted } from 'vue';
-import useFetch from '@/composables/useFetch';
-import Box from '@/components/UI/Box.vue';
-import MainTitle from '@/components/UI/MainTitle.vue';
-import MainButton from '../buttons/MainButton.vue';
-import InterceptorHelper from '@/InterceptorHelper';
+import { ref, computed, watch, watchEffect } from "vue";
+import useFetch from "@/composables/useFetch";
+import Box from "@/components/UI/Box.vue";
 import PagesHeader from "@/components/UI/PagesHeader.vue";
-import FilterIcon from "@/components/icons/FilterIcon.vue";
-import RowSelect from "@/components/table/RowSelect.vue";
-import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
-import {changeDateFormat} from "@/utils";
+import { changeDateFormat } from "@/utils";
+import InterceptorHelper from "@/InterceptorHelper";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
+import SpinnerLoading from "@/components/UI/SpinnerLoading.vue";
 
-// Define the emitted events
-const emits = defineEmits(['openPopup', 'openFilter', 'openExport', 'reorder', 'update:searchQuery', 'update:showSearchInput', 'toggleFilter', 'add']);
+/* ===================== EMITS ===================== */
 
-// Define the props for your global table
+const emits = defineEmits([
+  "update:searchQuery",
+  "update:showSearchInput",
+  "toggleFilter",
+  "add",
+]);
+
+/* ===================== PROPS ===================== */
+
 const props = defineProps({
-  columns: {
-    type: Array as () => Array<{
-      key: string;
-      label: string;
-      sortable?: boolean;
-      ordering?: string;
-      type?: string;
-    }>,
-    required: true,
-  },
-  items: {
-    type: Array as () => Array<{ id: number; [key: string]: any }>,
-    default: () => [],
-  },
-  listUrl: {
-    type: String,
-    default: '',
-  },
-  title: {
-    type: String,
-    default: '',
-  },
-  hasPagination: {
-    type: Boolean,
-    default: true,
-  },
-  hasSearchBtn: {
-    type: Boolean,
-    default: true,
-  },
-  hasFilterBtn: {
-    type: Boolean,
-    default: true,
-  },
-  actions: {
-    type: Array as () => Array<any>,
-    default: () => [],
-  },
-  sortable: {
-    type: Boolean,
-    default: false,
-  },
-  reloadData: {
-    type: Boolean,
-    default: false,
-  },
-  urlParams: {
-    type: Object,
-    default: () => ({}),
-  },
-  showHeader: {
-    type: Boolean,
-    default: true,
-  },
-  showAddBtn: {
-    type: Boolean,
-    default: true,
-  },
+  columns: { type: Array, required: true },
+  items: { type: Array, default: () => [] },
+  listUrl: { type: String, default: "" },
 
-  actionBtnTitle: {
-    type: String,
-    default: '',
-  },
-  actionBtnLoading: {
-    type: Boolean,
-    default: false,
-  },
-  multiSelect: {
-    type: Boolean,
-    default: false,
-  },
+  title: String,
+  hasPagination: { type: Boolean, default: true },
+  hasSearchBtn: { type: Boolean, default: true },
+  hasFilterBtn: { type: Boolean, default: true },
+  actions: { type: Array, default: () => [] },
+
+  urlParams: { type: Object, default: () => ({}) },
+  showHeader: { type: Boolean, default: true },
+  showAddBtn: { type: Boolean, default: true },
+  showActionIcons: { type: Boolean, default: false },
+  actionBtnTitle: String,
+  actionBtnLoading: Boolean,
 });
 
-// Table state
-const tableData = ref(props.items || []);
+/* ===================== STATE ===================== */
+
+const tableData = ref<any[]>([]);
+const searchQuery = ref("");
+const showSearchInput = ref(false);
+const activeFilterSection = ref(false);
+
+/* Pagination (ONLY for API mode) */
+const page = ref(1);
+const perPage = ref(10);
+const pageSizes = [10, 25, 50, 100];
+
 const pagination = ref({
   total: 0,
-  next: null,
-  previous: null,
-  perPage: 10,
-  page: 1,
+  lastPage: 1,
+  hasMore: false,
 });
 
-const page = ref(1)
-const perPage = ref(10)
-const pageSizes = ref([10, 25, 50, 100])
+/* ===================== SORT ===================== */
 
-const searchQuery = ref('');
-const orderBy = ref('');
-const sortOrder = ref<'asc' | 'desc' | null>(null);
-const loadingData = ref(false);
-const placeholderData = ref(false);
-const showSearchInput = ref(false);
-
-// URL Params for fetching
-const urlParams = computed(() => props.urlParams || {});
-
-watch(urlParams, () => {
-  pagination.value.page = 1;
+const sortState = ref({
+  orderBy: "",
+  sortOrder: undefined as "asc" | "desc" | undefined,
+  sortedColumn: "",
 });
 
-// Fetch data using the useFetch composable
-onMounted(() => {
-  if (props.listUrl) {
-    fetchData();
+const handleSort = (key: string) => {
+  if (sortState.value.sortedColumn === key) {
+    sortState.value.sortOrder =
+        sortState.value.sortOrder === "asc" ? "desc" : "asc";
   } else {
+    sortState.value.sortedColumn = key;
+    sortState.value.sortOrder = "asc";
+  }
+
+  sortState.value.orderBy =
+      sortState.value.sortOrder === "desc" ? `-${key}` : key;
+
+  page.value = 1;
+};
+
+/* ===================== MODE ===================== */
+
+const isApiMode = computed(() => !!props.listUrl);
+
+/* ===================== FETCH (API MODE ONLY) ===================== */
+
+const { data, isLoading, isSuccess } = useFetch({
+  enabled: isApiMode,
+  queryKey: computed(() => [
+    props.listUrl,
+    page.value,
+    perPage.value,
+    searchQuery.value,
+    sortState.value.orderBy,
+    props.urlParams,
+  ]),
+  queryFn: async () => {
+    return InterceptorHelper.intercept(props.listUrl, undefined, {
+      page: page.value,
+      per_page: perPage.value,
+      search: searchQuery.value,
+      ordering: sortState.value.orderBy,
+      ...props.urlParams,
+    });
+  },
+});
+
+/* ===================== SYNC DATA ===================== */
+
+watchEffect(() => {
+  if (!isApiMode.value) {
     tableData.value = props.items;
+    return;
+  }
+
+  if (isSuccess.value && data.value) {
+    tableData.value = data.value.data;
+
+    const p = data.value.pagination;
+    pagination.value = {
+      total: p.total,
+      lastPage: p.last_page,
+      hasMore: p.has_more_pages,
+    };
   }
 });
 
+/* ===================== WATCHERS ===================== */
+
 watch(
     () => props.items,
-    (newItems) => {
-      if (!props.listUrl) {
-        tableData.value = newItems;
+    (val) => {
+      if (!isApiMode.value) {
+        tableData.value = val;
       }
     },
     { immediate: true }
 );
 
-
-const fetchData = async () => {
-  loadingData.value = true;
-  const { data, isLoading, isSuccess, isPlaceholderData } = useFetch({
-    queryKey: [props.listUrl, searchQuery, orderBy],
-    queryFn: async () => {
-      return InterceptorHelper.intercept(`${props.listUrl}/`, undefined, {
-        page: pagination.value.page,
-        page_size: pagination.value.perPage,
-        search: searchQuery.value,
-        ordering: orderBy.value,
-        ...urlParams.value,
-      });
-    },
-  });
-
-  loadingData.value = isLoading.value;
-  if (isSuccess) {
-    tableData.value = data.value?.results || [];
-    pagination.value.total = data.value?.count || 0;
-    pagination.value.next = data.value?.next;
-    pagination.value.previous = data.value?.previous;
-    placeholderData.value = isPlaceholderData.value;
-  }
-};
-
-// Pagination handlers
-const prevPage = () => {
-  pagination.value.page = Math.max(pagination.value.page - 1, 1);
-  fetchData();
-};
-
-const nextPage = () => {
-  if (pagination.value.next !== null) {
-    pagination.value.page += 1;
-    fetchData();
-  }
-};
-
-export interface SortState {
-  orderBy: string;
-  sortOrder: "asc" | "desc" | undefined;
-  sortedColumn: string;
-}
-
-const sortState = ref<SortState>({
-  orderBy: "",
-  sortOrder: undefined,
-  sortedColumn: "",
+watch([searchQuery, perPage, () => props.urlParams], () => {
+  page.value = 1;
 });
 
-const handleSort = (orderKey: string) => {
-  if (
-      sortState.value.sortOrder === "desc" &&
-      sortState.value.sortedColumn === orderKey
-  ) {
-    sortState.value.orderBy = `-${orderKey?.replace(".", "__")}`;
-    sortState.value.sortOrder = "asc";
-  } else {
-    sortState.value.orderBy = orderKey?.replace(".", "__");
-    sortState.value.sortOrder = "desc";
-    sortState.value.sortedColumn = orderKey;
-  }
-  fetchData();
+/* ===================== PAGINATION ===================== */
+
+const nextPage = () => {
+  if (page.value < pagination.value.lastPage) page.value++;
 };
 
-// Search handler
-const cancelSearch = () => {
-  showSearchInput.value = false;
-  searchQuery.value = '';
-  fetchData();
+const prevPage = () => {
+  if (page.value > 1) page.value--;
 };
-
-
-const activeFilterSection = ref(false)
 
 const toggleFilter = () => {
-  activeFilterSection.value = !activeFilterSection.value
-}
+  activeFilterSection.value = !activeFilterSection.value;
+};
 </script>
 
 <template>
@@ -282,22 +222,46 @@ const toggleFilter = () => {
                 />
               </svg>
             </span>
-              <h6 class="text-xs text-black/60 font-light capitalize truncate">
-                {{ column.label }}
+              <h6 class="text-sm text-black/60 font-medium capitalize truncate">
+                {{ $t(column.label) }}
               </h6>
             </div>
           </th>
           <th
-              v-if="actions?.length"
+              v-if="showActionIcons || actions?.length"
               class="end-0 bg-tableHeader transition-all duration-500"
           >
-            <h6 class="text-xs text-black/60 font-light capitalize">actions</h6>
+            <h6 class="text-sm text-black/60 font-medium capitalize">actions</h6>
           </th>
         </tr>
         </thead>
 
-        <tbody>
-        <tr v-for="(row, index) in tableData" :key="index">
+      <tbody v-if="isLoading && columns">
+      <tr>
+        <td
+            :colspan="`${columns.length + 1}`"
+            class="p-6"
+        >
+        <span class="flex justify-center items-center">
+          <SpinnerLoading></SpinnerLoading>
+        </span>
+        </td>
+      </tr>
+      </tbody>
+
+      <tbody v-else-if="!tableData?.length && columns">
+      <tr>
+        <td
+            :colspan="`${columns.length + 1}`"
+            class="p-6 text-center"
+        >
+          <span class="text-sm text-neural-300">{{ $t('noRecordsFound') }}</span>
+        </td>
+      </tr>
+      </tbody>
+
+        <tbody v-else>
+          <tr v-for="(row, index) in tableData" :key="index">
 
           <td
               class="duration-300 max-w-[250px]"
@@ -382,67 +346,69 @@ const toggleFilter = () => {
               </div>
             </slot>
           </td>
-          <td
-              v-if="actions?.length"
-              class="end-0"
-          >
-            <Menu as="div">
-              <MenuButton
-                  class="relative p-2 flex items-center justify-center w-full"
-              >
-                <svg
-                    class="flex-none size-4 hs-dropdown-open:text-white text-gray-600 dark:text-neutral-500 hs-dropdown-open:dark:text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="1" />
-                  <circle cx="12" cy="5" r="1" />
-                  <circle cx="12" cy="19" r="1" />
-                </svg>
 
-              <transition
-                  enter-active-class="transition ease-out duration-100"
-                  enter-from-class="transform opacity-0 scale-95"
-                  enter-to-class="transform opacity-100 scale-100"
-                  leave-active-class="transition ease-in duration-75"
-                  leave-from-class="transform opacity-100 scale-100"
-                  leave-to-class="transform opacity-0 scale-95"
-              >
-                <MenuItems  v-if="actions?.length"
-                    class="absolute top-0 right-0 mt-2 w-48 z-50 bg-white rounded-xl shadow-xl focus:outline-none"
+            <td v-if="showActionIcons">
+              <slot name="actions" v-bind="row"></slot>
+            </td>
+            <td v-else-if="actions?.length"
+                class="end-0"
+            >
+              <Menu as="div">
+                <MenuButton
+                    class="relative p-2 flex items-center justify-center w-full"
                 >
-                  <MenuItem
-                      class=""
-                      v-for="action in actions"
-                      :key="action.key"
-                      v-slot="{ active }"
+                  <svg
+                      class="flex-none size-4 hs-dropdown-open:text-white text-gray-600 dark:text-neutral-500 hs-dropdown-open:dark:text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                   >
-                    <button
-                        @click="action.action"
-                        class="w-full flex items-center gap-3 px-4 py-2 text-sm text-left"
-                        :class="active ? 'bg-primary-50' : ''"
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="12" cy="5" r="1" />
+                    <circle cx="12" cy="19" r="1" />
+                  </svg>
+
+                  <transition
+                      enter-active-class="transition ease-out duration-100"
+                      enter-from-class="transform opacity-0 scale-95"
+                      enter-to-class="transform opacity-100 scale-100"
+                      leave-active-class="transition ease-in duration-75"
+                      leave-from-class="transform opacity-100 scale-100"
+                      leave-to-class="transform opacity-0 scale-95"
+                  >
+                    <MenuItems  v-if="actions?.length"
+                                class="absolute top-0 ltr:right-0 rtl:left-0 mt-2 w-48 z-50 bg-white rounded-xl shadow-xl focus:outline-none"
                     >
+                      <MenuItem
+                          class=""
+                          v-for="action in actions"
+                          :key="action.key"
+                          v-slot="{ active }"
+                      >
+                        <button
+                            @click="action.action(row)"
+                            class="w-full flex items-center gap-3 px-4 py-2 text-sm text-left"
+                            :class="active ? 'bg-primary-50' : ''"
+                        >
                       <span
                           class="w-4"
                           v-if="action.icon"
                           v-html="action.icon"
                       />
-                      <span>{{ action.text }}</span>
-                    </button>
-                  </MenuItem>
-                </MenuItems>
-              </transition>
-              </MenuButton>
-            </Menu>
-          </td>
-
+                          <span>{{ action.text }}</span>
+                        </button>
+                      </MenuItem>
+                    </MenuItems>
+                  </transition>
+                </MenuButton>
+              </Menu>
+            </td>
         </tr>
         </tbody>
       </table>
@@ -451,13 +417,13 @@ const toggleFilter = () => {
       <!-- Pagination -->
       <div
           class="pt-3 flex items-center gap-3 justify-between flex-col lg:flex-row"
-          v-if="hasPagination && !loadingData && tableData?.length"
+          v-if="hasPagination && !isLoading && tableData?.length"
       >
         <p class="text-xs font-normal text-black/60">
-          Showing {{ tableData?.length }} results of {{ pagination.total }} entries
+          {{ $t('pagination.showing') }} {{ tableData?.length }} {{ $t('pagination.resultsOf') }} {{ pagination.total }} {{ $t('pagination.entries') }}
         </p>
         <div class="flex items-center gap-4">
-          <p class="text-black font-normal">Page</p>
+          <p class="text-black font-normal">{{ $t('pagination.page') }}</p>
           <div class="flex items-center gap-[0.9rem]">
             <span class="cursor-pointer px-2 py-4" @click="prevPage">
               <svg
@@ -466,6 +432,7 @@ const toggleFilter = () => {
                   height="6"
                   viewBox="0 0 4 6"
                   fill="none"
+                  class="rtl:rotate-180"
               >
                 <path
                     d="M3.5 5.03105L3.5 1.20527C3.5 0.778098 2.99894 0.547643 2.6746 0.825646L0.4429 2.73854C0.210094 2.93808 0.210094 3.29824 0.4429 3.49779L2.6746 5.41068C2.99894 5.68868 3.5 5.45823 3.5 5.03105Z"
@@ -476,7 +443,7 @@ const toggleFilter = () => {
             <div
                 class="rounded-full text-[#fff] bg-primary-700 flex justify-center items-center font-normal text-sm px-2"
             >
-              {{ page }} / {{ Math.ceil(pagination.total!! / perPage) }}
+              {{ page }} / {{ pagination.lastPage }}
             </div>
             <span class="cursor-pointer px-2 py-4" @click="nextPage">
               <svg
@@ -485,6 +452,7 @@ const toggleFilter = () => {
                   height="6"
                   viewBox="0 0 4 6"
                   fill="none"
+                  class="rtl:rotate-180"
               >
                 <path
                     d="M0.5 1.20527L0.5 5.03105C0.5 5.45823 1.00106 5.68868 1.3254 5.41068L3.5571 3.49779C3.78991 3.29824 3.78991 2.93808 3.5571 2.73854L1.3254 0.825646C1.00106 0.547643 0.5 0.778098 0.5 1.20527Z"

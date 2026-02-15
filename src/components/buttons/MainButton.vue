@@ -31,7 +31,7 @@
           />
         </svg>
       </slot>
-      <slot>{{ text }}</slot>
+      <slot>{{ $t(text) }}</slot>
       <slot name="right"></slot>
     </div>
 

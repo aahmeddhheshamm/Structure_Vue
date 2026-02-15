@@ -31,7 +31,7 @@
       </svg>
     </span>
 
-    <slot name="custom">{{ title }}</slot>
+    <slot name="custom">{{ $t(title) }}</slot>
   </h5>
 </template>
 

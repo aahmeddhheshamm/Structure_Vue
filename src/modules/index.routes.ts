@@ -1,4 +1,5 @@
-import settingsRoutes from "./settings/settings.routes.ts";
+import productsRoutes from "./products/products.routes.ts";
+import suppliersRoutes from "./suppliers/suppliers.routes.ts";
 
 export default [
     {
@@ -7,15 +8,16 @@ export default [
         children: [
             {
                 path: '',
-                name: 'home',
+                name: 'admin-panel',
                 component: () => import('./home/Index.vue')
             },
-        ...settingsRoutes,
+        ...productsRoutes,
+        ...suppliersRoutes,
         ]
     },
     {
         path: '', // Default route
-        redirect: { name: 'home' }
+        redirect: { name: 'admin-panel' }
     },
     {
         path: '/:pathMatch(.*)*',

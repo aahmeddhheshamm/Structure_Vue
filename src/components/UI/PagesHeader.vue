@@ -88,7 +88,7 @@ const clearSearch = () => {
         </div>
 
         <!-- Filter Button -->
-        <RoundedButton v-if="hasFilterBtn" @action="emits('toggleFilter')" v-tooltip="'Filter'"
+        <RoundedButton v-if="hasFilterBtn" @action="emits('toggleFilter')"  v-tooltip="$t('buttons.filters')"
                        :class="{ 'bg-primary-700': activeFilterSection === true }">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" class="fill-[#0376F9]"
                :class="{ 'fill-[#fff]': activeFilterSection === true }">

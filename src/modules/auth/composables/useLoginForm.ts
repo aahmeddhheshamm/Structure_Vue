@@ -1,13 +1,15 @@
 import useMutate from '@/composables/useMutate'
-// import { useToast } from '@/composables/useToast'
 import { useForm } from 'vee-validate'
 import {useLocaleSettings} from "@/composables/useLocaleSettings.ts";
 import * as yup from "yup";
 import {computed} from "vue";
 import {apiLogin} from "@/modules/auth/api";
+import router from "@/router";
+import {useAuthStore} from "@/store/auth.ts";
+import type {ApiLoginRequest} from "@/types/UserData.ts";
 
 export function useLoginForm() {
-    // const { toast } = useToast()
+    const authStore = useAuthStore()
     const { t } = useLocaleSettings();
     const schema = computed(() => {
         return yup.object({
@@ -27,7 +29,7 @@ export function useLoginForm() {
         });
     });
 
-    const { handleSubmit, values, errors } = useForm<any>({
+    const { handleSubmit, values, errors } = useForm<ApiLoginRequest>({
       validationSchema: schema,
     })
 
@@ -41,13 +43,16 @@ export function useLoginForm() {
     mutationFn: getMutationFn()
   })
 
-  const onSubmit = handleSubmit((values) => {
-    console.log(values)
+  const onSubmit = handleSubmit((values: ApiLoginRequest) => {
+      console.log(values)
     mutate(
       values,
       {
-        onSuccess: () => {
-          // toast.success(`Course ${method === 'add' ? 'added' : 'edited'} successfully.`)
+        onSuccess: (res) => {
+            authStore.setToken(res?.data.token)
+            authStore.setUserData(res?.data.admin)
+            // authStore.setRolesPermissions(res.data?.permissions || [])
+            router.push({name: 'admin-panel'})
         }
       }
     )

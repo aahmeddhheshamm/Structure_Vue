@@ -2,7 +2,7 @@
   <nav
     class="bg-white py-3 ps-6 pe-10 flex justify-between items-center border-b border-black/10 transition-all duration-500"
   >
-    <div class="flex items-center gap-7">
+    <div class="flex items-center gap-4">
       <span
         @click="toggleSidebar"
         :class="collapseIconClass"
@@ -23,9 +23,8 @@
           </template>
         </MobileSidebar>
       </span>
-
       <span class="font-medium text-2xl leading-none text-primary-700 capitalize">{{
-        route.path.split('/')[2] ? route.path.split('/')[2] : 'dashboard'
+        route.path.split('/')[2] ? $t(`sidebar.${route.path.split('/')[2]}`) : $t('sidebar.dashboard')
       }}</span>
     </div>
 
