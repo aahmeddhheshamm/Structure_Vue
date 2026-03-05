@@ -54,12 +54,10 @@ export function useRegisterForm() {
   })
 
   const onSubmit = handleSubmit((values) => {
-    console.log(values)
     mutate(
       values,
       {
         onSuccess: () => {
-          // toast.success(`Course ${method === 'add' ? 'added' : 'edited'} successfully.`)
         }
       }
     )

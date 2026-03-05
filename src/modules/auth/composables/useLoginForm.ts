@@ -44,7 +44,6 @@ export function useLoginForm() {
   })
 
   const onSubmit = handleSubmit((values: ApiLoginRequest) => {
-      console.log(values)
     mutate(
       values,
       {

@@ -90,7 +90,6 @@ private static baseUrl = import.meta.env.VITE_APP_API_URL
               position: toast.POSITION.BOTTOM_RIGHT
             })
           } else {
-            // console.log('response -> ', responseJson)
             for (const [key, value] of Object.entries(responseJson)) {
               toast.error(value, {
                 position: toast.POSITION.BOTTOM_RIGHT
