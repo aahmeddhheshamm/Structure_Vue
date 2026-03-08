@@ -82,8 +82,7 @@ Structure_Vue/
 │   │   ├── useFetch.ts        # TanStack Query wrapper for GET requests
 │   │   ├── useMutate.ts       # TanStack Query wrapper for mutations
 │   │   ├── useLocaleSettings.ts
-│   │   ├── useSideBar.ts
-│   │   └── DataTable.ts       # Data table state & pagination logic
+│   │   └── useSideBar.ts
 │   │
 │   ├── constants/             # App constants
 │   │   └── status.ts          # Status colors mapping
