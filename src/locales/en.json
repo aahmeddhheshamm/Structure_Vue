@@ -63,5 +63,7 @@
   },
   "noRecordsFound": "No Records Found",
   "myProfile": "My profile",
-  "logout": "Logout"
+  "logout": "Logout",
+  "image": "Image",
+  "supplierName": "Supplier Name"
 }

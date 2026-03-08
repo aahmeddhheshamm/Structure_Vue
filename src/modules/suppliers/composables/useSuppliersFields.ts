@@ -9,12 +9,12 @@ export default function useSuppliersFields() {
         },
         {
             key: 'image',
-            label: 'Image',
+            label: 'image',
             type: 'image',
         },
         {
             key: 'name',
-            label: 'Supplier Name',
+            label: 'supplierName',
         },
         {
             key: 'email',

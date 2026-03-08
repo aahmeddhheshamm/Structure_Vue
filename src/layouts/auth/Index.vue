@@ -5,13 +5,23 @@
       <div class="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
         <div class="max-w-md">
           <h1 class="text-4xl font-bold mb-6">{{ $t('auth.headerInfo') }}</h1>
-          <p class="text-lg text-blue-100">
+          <p class="text-lg text-neutral-100">
             {{ $t('auth.descriptionInfo') }}
           </p>
         </div>
       </div>
     </div>
-    <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-4 sm:p-6 ">
+    <div class="w-full lg:w-1/2 p-4 sm:p-6 bg-white">
+      <div class="flex items-center justify-between gap-3 w-full">
+        <div class="flex gap-2">
+          <rounded-button @action="toggleTheme">
+            <LightModeIcon v-if="currentTheme === 'light'"/>
+            <DarkModeIcon v-else />
+          </rounded-button>
+        </div>
+        <SwitchLanguage />
+      </div>
+      <div class="flex flex-col justify-center items-center h-full">
       <div class="w-full max-w-xl">
         <div class="mb-8 text-center">
           <img class="w-32 mx-auto" src="@/assets/images/text-logo.svg" />
@@ -53,6 +63,7 @@
         </div>
 
       </div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,10 +71,20 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import {useThemeStore} from "@/store/theme.ts";
+import {storeToRefs} from "pinia";
+import {onMounted} from "vue";
+import RoundedButton from "@/components/buttons/RoundedButton.vue";
+import SwitchLanguage from "@/layouts/dashboard/components/navbar/partial/SwitchLanguage.vue";
+import LightModeIcon from "@/components/icons/LightModeIcon.vue";
+import DarkModeIcon from "@/components/icons/DarkModeIcon.vue";
 
 const router = useRouter()
 const route = useRoute()
+const { toggleTheme, setTheme } = useThemeStore()
 
+
+const { currentTheme } = storeToRefs(useThemeStore())
 const isLoginRoute = computed(() => route.name === 'auth-login')
 const isRegisterRoute = computed(() => route.name === 'auth-register')
 
@@ -78,6 +99,10 @@ const goToRegister = () => {
     router.push({ name: 'auth-register' })
   }
 }
+
+onMounted(async () => {
+  setTheme(currentTheme.value)
+})
 </script>
 
 <style scoped>

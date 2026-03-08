@@ -55,7 +55,7 @@
           }"
         >
           <ul class="flex flex-col gap-2 pt-3">
-            <template v-for="(child, key) in item.children" :key="key">
+            <template v-for="(child, key) in item?.children" :key="key">
               <li>
                 <router-link
                     :to="{ name: child?.routeName }"
@@ -88,7 +88,7 @@ import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import {sidebarItems, icons} from "@/composables/useSideBar.ts";
 
-const props = defineProps({
+ defineProps({
   item: { type: Object },
   active: { type: Boolean, default: false },
   mini: { type: Boolean }

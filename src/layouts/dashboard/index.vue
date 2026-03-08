@@ -14,7 +14,7 @@
     >
       <main-nav class="sticky top-0 z-10" @collapse="collapseSidebar" />
       <div data-scrollbar id="main-scrollbar" tabindex="-1">
-        <div class="bg-dashboardBg transition-all duration-500 min-h-screen">
+        <div class="bg-dashboardBg transition-all duration-500 min-h-[calc(100vh-66px)]">
           <suspense>
             <template #default>
               <router-view v-slot="{ Component, route }">
@@ -63,7 +63,7 @@ const collapseSidebar = (value: boolean) => {
 }
 
 const divClass = computed(() => {
-  return isExpanded.value ? '!ps-[18.875rem]' : ''
+  return isExpanded.value ? 'md:!ps-[18.875rem]' : ''
 })
 
 const sidebarClass = computed(() => {

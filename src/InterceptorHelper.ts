@@ -1,7 +1,7 @@
 import { toast } from 'vue3-toastify'
 
 export default class InterceptorHelper {
-private static baseUrl = import.meta.env.VITE_APP_API_URL
+  private static baseUrl = import.meta.env.VITE_APP_API_URL
 
   // intercept request
   static async interceptRequest(options: RequestInit = {}): Promise<RequestInit> {
@@ -33,9 +33,9 @@ private static baseUrl = import.meta.env.VITE_APP_API_URL
   }
 
   static async interceptXHR<T>(
-    url: string,
-    payload: any,
-    onProgress: (e: ProgressEvent<XMLHttpRequestEventTarget>) => void
+      url: string,
+      payload: any,
+      onProgress: (e: ProgressEvent<XMLHttpRequestEventTarget>) => void
   ) {
     const token = localStorage.getItem('token')
 
@@ -67,38 +67,30 @@ private static baseUrl = import.meta.env.VITE_APP_API_URL
     }
 
     const responseJson = await response.json()
-        // handle response error
-        if (!response.ok) {
-          if (responseJson?.data) {
-            if (responseJson.data?.length) {
-              for (const [key, value] of Object.entries(responseJson.data)) {
-                toast.error(value, {
-                  position: toast.POSITION.BOTTOM_RIGHT
-                })
-              }
-            }
-            else {
-              for (const [key, value] of Object.entries(responseJson.errors)) {
-                toast.error(value, {
-                  position: toast.POSITION.BOTTOM_RIGHT
-                })
-              }
-            }
+    // handle response error
+    if (!response.ok) {
+      if (responseJson?.data) {
+        if (responseJson.data?.length) {
+          for (const [key, value] of Object.entries(responseJson.data)) {
+            toast.error(value)
           }
-          else if (responseJson.message || responseJson.error) {
-            toast.error(responseJson.message || responseJson.error, {
-              position: toast.POSITION.BOTTOM_RIGHT
-            })
-          } else {
-            for (const [key, value] of Object.entries(responseJson)) {
-              toast.error(value, {
-                position: toast.POSITION.BOTTOM_RIGHT
-              })
-            }
-          }
-          return Promise.reject(responseJson)
         }
-    
+        else {
+          for (const [key, value] of Object.entries(responseJson.errors)) {
+            toast.error(value)
+          }
+        }
+      }
+      else if (responseJson.message || responseJson.error) {
+        toast.error(responseJson.message || responseJson.error)
+      } else {
+        for (const [key, value] of Object.entries(responseJson)) {
+          toast.error(value)
+        }
+      }
+      return Promise.reject(responseJson)
+    }
+
     // handle response success
     if (method && method.toLowerCase() !== 'get') {
       // toast.success(message);
@@ -109,19 +101,19 @@ private static baseUrl = import.meta.env.VITE_APP_API_URL
 
   // intercept function
   static async intercept<T>(
-    url: string,
-    options: RequestInit = {},
-    queryParams: Record<string, string | number> = {}
+      url: string,
+      options: RequestInit = {},
+      queryParams: Record<string, string | number> = {}
   ): Promise<TypeResponse> {
     // Construct query string from queryParams object
     const queryString = Object.keys(queryParams)
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`)
-      .join('&')
+        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`)
+        .join('&')
 
     // Append query string to the URL
     const fullUrl = Object.keys(queryParams).length
-      ? `${InterceptorHelper.baseUrl}${url}?${queryString}`
-      : `${InterceptorHelper.baseUrl}${url}${queryString}`
+        ? `${InterceptorHelper.baseUrl}${url}?${queryString}`
+        : `${InterceptorHelper.baseUrl}${url}${queryString}`
 
     // handle request
     const requestOptions = await InterceptorHelper.interceptRequest(options)

@@ -63,5 +63,7 @@
   },
   "noRecordsFound": "لا توجد بيانات",
   "myProfile": "ملفي الشخصي",
-  "logout": "تسجيل الخروج"
+  "logout": "تسجيل الخروج",
+  "image": "الصورة",
+  "supplierName": "اسم المورد"
 }

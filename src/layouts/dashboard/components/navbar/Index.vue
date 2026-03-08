@@ -14,9 +14,7 @@
       <span class="block md:hidden">
         <MobileSidebar>
           <template #buttonContent>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512">
-              <path fill="#0376f9" d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/>
-            </svg>
+           <MenuIcon class="fill-primary-700" />
           </template>
           <template #sideBarLinks>
             <AccordionSidebar :mini="false" />
@@ -37,7 +35,7 @@
       </div>
       <SwitchLanguage />
 
-      <UserHint :name="`navbar`" class="hidden md:block" />
+      <UserHint :name="`navbar`" class="" />
     </div>
   </nav>
 </template>
@@ -55,6 +53,7 @@ import SwitchLanguage from "@/layouts/dashboard/components/navbar/partial/Switch
 import ExpandIcon from "@/components/icons/ExpandIcon.vue";
 import LightModeIcon from "@/components/icons/LightModeIcon.vue";
 import DarkModeIcon from "@/components/icons/DarkModeIcon.vue";
+import MenuIcon from "@/components/icons/MenuIcon.vue";
 
 const route = useRoute()
 

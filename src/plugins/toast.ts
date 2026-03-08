@@ -3,6 +3,6 @@ import "vue3-toastify/dist/index.css";
 import type {App} from "vue";
 export default {
   install: (app:App<Element>, options = {}) => {
-    app.use(Vue3Toastify, options);
+    app.use(Vue3Toastify, {position: 'top-center', ...options});
   },
 };
