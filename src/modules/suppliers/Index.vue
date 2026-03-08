@@ -17,6 +17,7 @@ const { fields, actions, sampleData } = useSuppliersFields()
       :hasPagination="false"
       action-btn-title="buttons.addSupplier"
       class="text-neural-300 font-normal text-xs"
+      @add-action-btn="$router.push({ name: 'admin-panel' })"
   >
     <template #image="data">
       <img

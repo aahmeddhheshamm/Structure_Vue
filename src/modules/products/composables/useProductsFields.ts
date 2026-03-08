@@ -15,6 +15,7 @@ export default function useProductsFields() {
         {
             key: 'name',
             label: 'Name',
+            sortable: true,
         },
 
         {

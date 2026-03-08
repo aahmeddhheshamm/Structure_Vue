@@ -26,11 +26,11 @@ const { fields } = useProductsFields()
       :columns="fields"
       list-url="product"
       :url-params="filters"
-
       :has-filter-btn="true"
       :show-action-icons="true"
       action-btn-title="buttons.addProduct"
       class="text-neural-300 font-normal text-xs"
+
   >
 
     <template #filters>

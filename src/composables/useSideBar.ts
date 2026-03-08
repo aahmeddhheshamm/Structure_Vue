@@ -17,7 +17,7 @@ export const sidebarItems = computed(() => [
         title: 'dashboard',
         icon: 'DashboardIcon',
         routeName: 'admin-panel',
-      },
+      }
     ]
   },
   {

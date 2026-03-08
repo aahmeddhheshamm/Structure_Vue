@@ -14,7 +14,7 @@ const emits = defineEmits([
   "update:searchQuery",
   "update:showSearchInput",
   "toggleFilter",
-  "add",
+  "addActionBtn",
 ]);
 
 /* ===================== PROPS ===================== */
@@ -174,7 +174,7 @@ const toggleFilter = () => {
           @update:searchQuery="searchQuery = $event"
           @update:showSearchInput="showSearchInput = $event"
           @toggleFilter="toggleFilter"
-          @add="emits('add')"
+          @add="emits('addActionBtn')"
       />
     </template>
     <transition name="fade" mode="out-in">
