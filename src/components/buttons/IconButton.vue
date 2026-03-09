@@ -1,4 +1,7 @@
-<script setup>
+<script setup lang="ts">
+const emit = defineEmits<{
+(e: "action"): () => void;
+}>();
 
 defineProps({
   loading: { type: Boolean, default: false, required: false },
@@ -16,6 +19,7 @@ defineProps({
       type="button"
       :disabled="disabled || loading"
       v-bind="$attrs"
+      @click="emit('action')"
   >
     <div
         v-if="loading"

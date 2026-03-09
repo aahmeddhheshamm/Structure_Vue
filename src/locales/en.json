@@ -3,24 +3,25 @@
   "fields": {
     "email": "Email address",
     "enterEmail": "Enter email address",
-
     "password": "Password",
     "enterPassword": "Enter Password",
-
     "newPassword": "New password",
     "enterNewPassword": "Enter new password",
-
     "confirmPassword": "Confirm password",
     "enterConfirmPassword": "Enter confirm password ",
-
     "name": "Name",
-    "enterName": "Enter mame",
-
+    "enterName": "Enter name",
+    "productName": "Product name",
+    "enterProductName": "Enter product name",
     "phone": "Phone number",
     "enterPhone": "Enter phone number",
-
-    "selectDate": "Select Date"
-
+    "selectDate": "Select Date",
+    "price": "Price",
+    "enterPrice": "Enter price",
+    "category": "Category",
+    "selectCategory": "Select category",
+    "subCategories": "Sub category",
+    "selectSubCategories": "Select sub category"
   },
   "validations": {
     "required": "{field} required",
@@ -35,7 +36,8 @@
     "clearFilters": "Clear Filters",
     "view": "View",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "submit": "Submit"
   },
   "auth": {
     "headerInfo": "Welcome Back",
@@ -65,5 +67,11 @@
   "myProfile": "My profile",
   "logout": "Logout",
   "image": "Image",
-  "supplierName": "Supplier Name"
+  "supplierName": "Supplier Name",
+
+  "modal": {
+    "addProduct": "Add Product",
+    "editProduct": "Edit Product",
+    "viewProduct": "View Product"
+  }
 }

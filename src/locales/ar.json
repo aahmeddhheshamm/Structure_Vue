@@ -3,23 +3,25 @@
   "fields": {
     "email": "البريد الإلكتروني",
     "enterEmail": "ادخل البريد الإلكتروني",
-
     "password": "كلمة المرور",
     "enterPassword": "ادخل كلمة المرور",
-
     "newPassword": "كلمة المرور الجديدة",
     "enterNewPassword": "ادخل كلمة المرور الجديدة",
-
     "confirmPassword": "تأكيد كلمة المرور",
     "enterConfirmPassword": "ادخل كلمة المرور مرة اخري",
-
     "name": "الإسم",
     "enterName": "ادخل الاسم",
-
+    "productName": "اسم المنتج",
+    "enterProductName": "أدخل اسم المنتج",
     "phone": "رقم الجوال",
     "enterPhone": "ادخل رقم الجوال",
-
-    "selectDate": "اختيار التاريخ"
+    "selectDate": "اختيار التاريخ",
+    "price": "السعر",
+    "enterPrice": "أدخل السعر",
+    "category": "القسم",
+    "selectCategory": "اختر القسم",
+    "subCategories": "القسم الفرعي",
+    "selectSubCategories": "اختر القسم الفرعي"
 
   },
   "validations": {
@@ -35,7 +37,8 @@
     "clearFilters": "مسح الفلاتر",
     "view": "عرض",
     "edit": "تعديل",
-    "delete": "مسح"
+    "delete": "مسح",
+    "submit": "إرسال"
   },
   "auth": {
     "headerInfo": "مرحبًا بعودتك",
@@ -65,5 +68,11 @@
   "myProfile": "ملفي الشخصي",
   "logout": "تسجيل الخروج",
   "image": "الصورة",
-  "supplierName": "اسم المورد"
+  "supplierName": "اسم المورد",
+
+  "modal": {
+    "addProduct": "أضافة منتج",
+    "editProduct": "تعديل المنتج",
+    "viewProduct": "عرض المنتج"
+  }
 }

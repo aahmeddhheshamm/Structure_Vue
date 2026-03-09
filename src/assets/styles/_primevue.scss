@@ -5,20 +5,22 @@
 input, textarea {
   transition: ease-in-out 300ms;
 
-  &.p-inputtext, {
-    @apply border border-solid rounded-lg bg-transparent  border-black/10 p-3  text-black/60 ;
-    &:disabled {
-      @apply bg-primary-600;
-      @apply text-primary-300;
+  &.p-inputtext {
+    @apply border border-solid rounded-md bg-transparent border-black/10 py-2.5 px-3 text-black/60;
+    &:disabled,
+    &.p-disabled {
+      @apply bg-neutral-200 text-primary-300 border-black/10;
+      cursor: not-allowed;
+      pointer-events: none;
     }
-
-    &:hover {
+    &:enabled:hover:not(.p-disabled) {
       border-color: theme('colors.primary.700') !important;
     }
 
-    &:focus {
+    &:enabled:focus:not(.p-disabled) {
       border-color: theme('colors.primary.700');
       box-shadow: none !important;
+      outline: none;
     }
 
     &::placeholder {
@@ -26,26 +28,14 @@ input, textarea {
       padding: 5px 0 5px 0 !important;
       @apply text-neutral-500;
     }
-
-    &:enabled:focus {
-      border-color: theme('colors.primary.700');
-    }
   }
 
-  &.is-invalid:focus,
-  &.is-invalid:hover {
-    border-color: theme('colors.errors.100') !important;
-    caret-color: theme('colors.errors.100') !important;
-  }
-
-}
-
-input, textarea {
-  &:disabled, &:read-only {
-    border-color: theme('colors.black/10') !important;
-
-    &:hover {
-      border-color: theme('colors.black/10') !important;
+  // Invalid State logic
+  &.is-invalid {
+    &:enabled:focus,
+    &:enabled:hover {
+      border-color: theme('colors.errors.100') !important;
+      caret-color: theme('colors.errors.100') !important;
     }
   }
 }
@@ -157,4 +147,18 @@ input[type="number"] {
 .p-checkbox-checked .p-checkbox-box {
   border-color: theme('colors.primary.700') !important;
   background: theme('colors.primary.700') !important;
+}
+
+//Dialog
+
+.p-dialog{
+  @apply rounded-md m-0 max-h-full !important;
+}
+
+.p-dialog-header {
+  @apply border-b border-neutral-400;
+}
+
+.p-dialog-title {
+  @apply text-lg !important
 }

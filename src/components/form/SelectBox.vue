@@ -88,7 +88,7 @@ type Props = {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  multi: true,
+  multi: false,
   filter: false,
   staticOptions: () => []
 })
@@ -153,6 +153,7 @@ async function fetchRemoteOptions() {
     options.value = data.value.data
     syncValuesWithOptions()
   }
+  loading.value = false
 }
 
 async function resolveOptions() {

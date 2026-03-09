@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-6 transition-all duration-500 box-shadow" v-bind="$attrs">
+  <div class="bg-white p-6 transition-all duration-500 box-shadow rounded-md" v-bind="$attrs">
     <div v-if="$slots.header" class="">
       <div class="border-b border-black/10 pb-4 mb-4">
         <slot name="header" />

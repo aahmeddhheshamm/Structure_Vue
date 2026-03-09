@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { useField } from 'vee-validate';
 import {computed} from "vue";
-import type {InputTextFieldProps} from "@/types/FormComponents.ts";
+import type {InputTextFieldProps} from "@/types/types.ts";
 
 defineOptions({
   inheritAttrs: false
