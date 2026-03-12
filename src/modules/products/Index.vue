@@ -10,7 +10,7 @@ import EditIcon from "@/components/icons/EditIcon.vue";
 import EyeFill from "@/components/icons/EyeFill.vue";
 import IconButton from "@/components/buttons/IconButton.vue";
 import ProductAddForm from "@/modules/products/components/ProductAddForm.vue";
-import MainModal from "@/components/UI/MainModal.vue";
+import MainModal from "@/components/UI/modals/MainModal.vue";
 import ProductEditForm from "@/modules/products/components/ProductEditForm.vue";
 
 const filters = ref({

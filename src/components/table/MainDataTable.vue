@@ -52,7 +52,6 @@ const activeFilterSection = ref(false);
 const page = ref(1);
 const perPage = ref(10);
 const pageSizes = [10, 25, 50, 100];
-const placeholderData = ref()
 const pagination = ref({
   total: 0,
   lastPage: 1,
@@ -68,7 +67,7 @@ const isApiMode = computed(() => !!props.listUrl);
 
 /* ===================== FETCH (API MODE ONLY) ===================== */
 
-const { data, isLoading, isSuccess, isPlaceholderData } = useFetch({
+const { data, isLoading, isSuccess } = useFetch({
   enabled: isApiMode,
   queryKey: computed(() => [
     props.listUrl,
@@ -99,7 +98,6 @@ watchEffect(() => {
 
   if (isSuccess.value && data.value) {
     tableData.value = data.value.data;
-    placeholderData.value = isPlaceholderData.value
     const p = data.value?.meta;
     // const p = data.value?.pagination;
     pagination.value = {
@@ -295,7 +293,7 @@ const reorderData = () => {
             :component-data="componentData"
             v-bind="dragOptions"
         >
-          <template #item="{ element }">
+          <template #item="{ element, index }">
 
             <tr :class="['whitespace-nowrap', { 'cursor-all-scroll': sortable }]">
               <td

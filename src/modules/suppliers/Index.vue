@@ -4,15 +4,10 @@ import useSuppliersFields from "@/modules/suppliers/composables/useSuppliersFiel
 
 const { fields, actions, sampleData } = useSuppliersFields()
 
-const reorderContent = (data) => {
-  console.log(data)
-}
 </script>
 
 <template>
   <MainDataTable
-      @reorder="reorderContent"
-      sortable
       title="sidebar.suppliers"
       :columns="fields"
       :items="sampleData"

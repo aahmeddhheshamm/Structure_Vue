@@ -2,8 +2,8 @@
 import { useI18n } from 'vue-i18n';
 import type {MainModalProps} from "@/types/types.ts";
 import MainButton from "@/components/buttons/MainButton.vue";
-import useMutate from "@/composables/useMutate";
-import InterceptorHelper from "@/InterceptorHelper";
+import useMutate from "@/composables/useMutate.ts";
+import InterceptorHelper from "@/InterceptorHelper.ts";
 import {computed} from "vue";
 import {toast} from "vue3-toastify";
 

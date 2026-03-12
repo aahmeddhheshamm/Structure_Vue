@@ -7,12 +7,12 @@ import DeleteIcon from "@/components/icons/DeleteIcon.vue";
 import EditIcon from "@/components/icons/EditIcon.vue";
 import EyeFill from "@/components/icons/EyeFill.vue";
 import IconButton from "@/components/buttons/IconButton.vue";
-import MainModal from "@/components/UI/MainModal.vue";
+import MainModal from "@/components/UI/modals/MainModal.vue";
 import TagAddForm from "@/modules/tags/components/TagAddForm.vue";
 import TagEditForm from "@/modules/tags/components/TagEditForm.vue";
 import TagsFilterForm from "@/modules/tags/components/TagsFilterForm.vue";
 import useTagsFields from "@/modules/tags/composables/useTagsFields.ts";
-import DeleteModal from "@/components/UI/DeleteModal.vue";
+import DeleteModal from "@/components/UI/modals/DeleteModal.vue";
 
 const filters = ref({
   title: "",
