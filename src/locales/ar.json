@@ -55,6 +55,8 @@
   "status": {
     "inactive": "غير نشط",
     "active": "نشط",
+    "Inactive": "غير نشط",
+    "Active": "نشط",
     "pending": "قيد الانتظار",
     "rejected": "مرفوض"
   },

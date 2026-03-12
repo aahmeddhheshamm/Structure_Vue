@@ -42,4 +42,5 @@ export interface ApiLoginResponse {
 export interface ApiLoginRequest {
     email: string,
     password: string
+    type?: number
 }

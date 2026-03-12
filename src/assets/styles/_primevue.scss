@@ -9,7 +9,7 @@ input, textarea {
     @apply border border-solid rounded-md bg-transparent border-black/10 py-2.5 px-3 text-black/60;
     &:disabled,
     &.p-disabled {
-      @apply bg-neutral-200 text-primary-300 border-black/10;
+      @apply bg-neutral-200 border-black/10;
       cursor: not-allowed;
       pointer-events: none;
     }

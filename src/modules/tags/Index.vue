@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import MainDataTable from "@/components/table/MainDataTable.vue";
-import ProductsFilterForm from "@/modules/products/components/ProductsFilterForm.vue";
-import useProductsFields from "@/modules/products/composables/useProductsFields.ts";
 import placeholderImg from "@/assets/images/img_placeholder.jpg"
 import {statusColor} from "@/constants/status.ts";
 import DeleteIcon from "@/components/icons/DeleteIcon.vue";
 import EditIcon from "@/components/icons/EditIcon.vue";
 import EyeFill from "@/components/icons/EyeFill.vue";
 import IconButton from "@/components/buttons/IconButton.vue";
-import ProductAddForm from "@/modules/products/components/ProductAddForm.vue";
 import MainModal from "@/components/UI/MainModal.vue";
-import ProductEditForm from "@/modules/products/components/ProductEditForm.vue";
+import TagAddForm from "@/modules/tags/components/TagAddForm.vue";
+import TagEditForm from "@/modules/tags/components/TagEditForm.vue";
+import TagsFilterForm from "@/modules/tags/components/TagsFilterForm.vue";
+import useTagsFields from "@/modules/tags/composables/useTagsFields.ts";
+import DeleteModal from "@/components/UI/DeleteModal.vue";
 
 const filters = ref({
   title: "",
@@ -19,56 +20,83 @@ const filters = ref({
   category: "",
   sub_categories: "",
 });
-const { fields } = useProductsFields()
+
 const visibleAddForm = ref(false);
 const visibleEditForm = ref(false);
-const productId = ref('');
+const visibleDeleteModal = ref(false);
+const tagId = ref('');
 const methodMode = ref('');
 const headerTitle = ref('');
+const deleteData = ref();
 
-const visibleAddProduct = (method: string) => {
-  methodMode.value = method;
+const visibleAddProduct = () => {
+  methodMode.value = 'add';
   visibleAddForm.value = true;
 }
 
 const visibleEditProduct = (id: string, method: string) => {
-  productId.value = id;
+  tagId.value = id;
   methodMode.value = method;
-  headerTitle.value = method === "view" ? "modal.viewProduct" : "modal.editProduct";
+  headerTitle.value = method === "view" ? "modal.viewTag" : "modal.editTag";
   visibleEditForm.value = true;
+}
+const visibleDelete = (data) => {
+  deleteData.value = {
+    id: data.id,
+    text: data.name,
+    url: 'dashboard/tags',
+    key: 'dashboard/tags',
+  };
+  visibleDeleteModal.value = true;
+  console.log(deleteData.value)
+}
+
+const { fields } = useTagsFields()
+
+const reorderContent = (data) => {
+  console.log(data)
 }
 </script>
 
 <template>
   <MainModal
       v-model:visible="visibleAddForm"
-      headerTitle="modal.addProduct"
+      headerTitle="modal.addTag"
   >
-    <ProductAddForm @close="visibleAddForm = false" :methodMode="methodMode"  />
+    <TagAddForm @close="visibleAddForm = false" :methodMode="methodMode"  />
   </MainModal>
 
   <MainModal
       v-model:visible="visibleEditForm"
       :headerTitle="headerTitle"
   >
-    <ProductEditForm @close="visibleEditForm = false" :id="productId" :methodMode="methodMode"  />
+    <TagEditForm @close="visibleEditForm = false" :id="tagId" :methodMode="methodMode"  />
   </MainModal>
 
+  <DeleteModal
+      v-model:visible="visibleDeleteModal"
+      headerTitle="modal.deleteTage"
+      @close="visibleDeleteModal = false"
+      :deleteData="deleteData"
+  />
+
   <MainDataTable
-      title="sidebar.products"
+      @reorder="reorderContent"
+      sortable
+      title="sidebar.tags"
       :columns="fields"
-      list-url="product"
+      list-url="dashboard/tags"
       :url-params="filters"
       :has-filter-btn="true"
       :show-action-icons="true"
-      action-btn-title="buttons.addProduct"
+      action-btn-title="buttons.addTag"
       class="text-neural-300 font-normal text-xs"
       @add-action-btn="visibleAddProduct"
   >
 
     <template #filters>
       <div class="w-full">
-        <ProductsFilterForm v-model:filters="filters" />
+        <TagsFilterForm v-model:filters="filters" />
       </div>
 
     </template>
@@ -83,7 +111,7 @@ const visibleEditProduct = (id: string, method: string) => {
           <EditIcon/>
         </IconButton>
 
-        <IconButton :tooltip-value="$t('buttons.delete')" is-delete-button>
+        <IconButton :tooltip-value="$t('buttons.delete')" is-delete-button @action="visibleDelete(data)">
           <DeleteIcon />
         </IconButton>
       </div>
@@ -95,8 +123,8 @@ const visibleEditProduct = (id: string, method: string) => {
             class="w-[50px] h-[50px] rounded-[8px] object-cover"
         />
     </template>
-    <template #status="data">
-    <Badge :severity="statusColor[data.status] || 'secondary'" class="uppercase">{{$t(`status.${data.status}`)}}</Badge>
+    <template #active_status="data">
+    <Badge :severity="statusColor[data.active_status] || 'secondary'" class="uppercase">{{$t(`status.${data.active_status}`)}}</Badge>
     </template>
 
   </MainDataTable>

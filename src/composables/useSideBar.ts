@@ -30,4 +30,9 @@ export const sidebarItems = computed(() => [
     icon: 'HomeIcon',
     routeName: 'products',
   },
+  {
+    title: 'tags',
+    icon: 'HomeIcon',
+    routeName: 'tags',
+  },
 ]);

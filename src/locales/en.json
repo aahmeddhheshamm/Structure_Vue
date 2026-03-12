@@ -54,6 +54,8 @@
   "status": {
     "inactive": "Inactive",
     "active": "Active",
+    "Inactive": "Inactive",
+    "Active": "Active",
     "pending": "Pending",
     "rejected": "Rejected"
   },

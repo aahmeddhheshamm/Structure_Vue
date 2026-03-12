@@ -45,11 +45,11 @@ export function useLoginForm() {
 
   const onSubmit = handleSubmit((values: ApiLoginRequest) => {
     mutate(
-      values,
+        {...values, type: 1},
       {
         onSuccess: (res) => {
             authStore.setToken(res?.data.token)
-            authStore.setUserData(res?.data.admin)
+            authStore.setUserData(res?.data)
             // authStore.setRolesPermissions(res.data?.permissions || [])
             router.push({name: 'admin-panel'})
         }

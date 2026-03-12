@@ -116,6 +116,11 @@ Structure_Vue/
 │   │   │   ├── composables/   # useSuppliersFields
 │   │   │   ├── Index.vue
 │   │   │   └── suppliers.routes.ts
+│   │   ├── tags/         # Tags module
+│   │   │   ├── components/    # TagsFilterForm
+│   │   │   ├── composables/   # useTagsFields
+│   │   │   ├── Index.vue
+│   │   │   └── tags.routes.ts
 │   │   └── index.routes.ts    # Main admin routes
 │   │
 │   ├── plugins/               # Vue plugins

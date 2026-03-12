@@ -1,5 +1,6 @@
 import productsRoutes from "./products/products.routes.ts";
 import suppliersRoutes from "./suppliers/suppliers.routes.ts";
+import tagsRoutes from "./tags/tags.routes.ts";
 
 export default [
     {
@@ -13,6 +14,7 @@ export default [
             },
         ...productsRoutes,
         ...suppliersRoutes,
+        ...tagsRoutes,
         ]
     },
     {

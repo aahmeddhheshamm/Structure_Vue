@@ -4,7 +4,7 @@ import {useLocaleSettings} from "@/composables/useLocaleSettings.ts";
 import * as yup from "yup";
 import {computed} from "vue";
 import router from "@/router";
-import {apiAddNewProduct} from "@/modules/products/api";
+import {apiAddNewProduct, apiEditProduct} from "@/modules/products/api";
 import type {ApiProductRequest, ProductType} from "@/types/types.ts";
 
 export function useCrudProductFields(methodMode: 'edit' | 'add', data?: ProductType) {
@@ -50,12 +50,17 @@ export function useCrudProductFields(methodMode: 'edit' | 'add', data?: ProductT
     })
 
     const getMutationFn = () => {
-        return apiAddNewProduct
+        if (methodMode === 'edit') {
+            return (values: any) => apiEditProduct(values, data?.id)
+        } else {
+            return apiAddNewProduct
+        }
+
     }
 
     const { mutate, isPending } = useMutate({
-        mutationKey: ['add-product'],
-        queryKey: ['add-product'],
+        mutationKey: [methodMode === 'edit' ? 'edit-product' : 'add-product'],
+        queryKey: ['product'],
         mutationFn: getMutationFn()
     })
 

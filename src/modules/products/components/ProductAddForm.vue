@@ -10,6 +10,10 @@ import {useCrudProductFields} from "@/modules/products/composables/useCrudProduc
 const { t } = useLocaleSettings();
 defineEmits(['close']);
 
+const props = defineProps<{
+  methodMode: string
+}>()
+
 const { values, resetForm } = useForm({
   keepValuesOnUnmount: true,
   initialValues: {
@@ -27,7 +31,7 @@ const levels = ref([
   { label: 'advanced', value: 'advanced' }
 ])
 
-const { onSubmit, isPending } = useCrudProductFields();
+const { onSubmit, isPending } = useCrudProductFields(props.methodMode);
 
 </script>
 
