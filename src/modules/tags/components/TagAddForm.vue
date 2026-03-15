@@ -10,7 +10,7 @@ const { t } = useLocaleSettings();
 const emit = defineEmits(['close']);
 
 const props = defineProps<{
-  methodMode: 'add' | 'edit' | 'view'
+  methodMode: string
 }>()
 
 

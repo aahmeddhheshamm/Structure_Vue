@@ -31,14 +31,19 @@
       </svg>
     </span>
 
-    <slot name="custom">{{ $t(title) }}</slot>
+    <slot name="custom">{{ t(title) }}</slot>
   </h5>
 </template>
 
 <script setup lang="ts">
+
+import {useI18n} from "vue-i18n";
+
+const { t } = useI18n();
 defineProps({
   title: {
-    type: String
+    type: String,
+    default: ''
   },
   breadcrumbTitle: {
     type: String,

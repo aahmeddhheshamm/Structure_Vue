@@ -2,7 +2,7 @@
 const emits = defineEmits<{
   (e: 'prevPage'): void;
   (e: 'nextPage'): void;
-  (e: 'update:perPage', value: number): void; // إضافة دعم لتحديث عدد العناصر
+  (e: 'update:perPage', value: number): void;
 }>();
 
  withDefaults(defineProps<{

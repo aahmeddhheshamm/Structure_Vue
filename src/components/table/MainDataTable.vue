@@ -9,6 +9,7 @@ import InterceptorHelper from "@/InterceptorHelper";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import SpinnerLoading from "@/components/UI/SpinnerLoading.vue";
 import TablePagination from "@/components/table/TablePagination.vue";
+import RowSelect from "@/components/table/RowSelect.vue";
 
 /* ===================== EMITS ===================== */
 
@@ -17,7 +18,8 @@ const emits = defineEmits([
   "update:showSearchInput",
   "toggleFilter",
   "addActionBtn",
-  "reorder"
+  "reorder",
+  "update:selectedRows"
 ]);
 
 /* ===================== PROPS ===================== */
@@ -39,7 +41,9 @@ const props = defineProps({
   showActionIcons: { type: Boolean, default: false },
   actionBtnTitle: String,
   actionBtnLoading: Boolean,
-  sortable: { type: Boolean, default: false }
+  sortable: { type: Boolean, default: false },
+  multiSelect: { type: Boolean, default: false },
+  selectedRows: {},
 });
 
 /* ===================== STATE ===================== */
@@ -178,6 +182,51 @@ const reorderData = () => {
       tableData.value.map((data) => data.id)
   )
 }
+
+// SelectBox of Row or Select All
+const tableSelectedRows = ref(new Set<number>())
+watch(
+    tableSelectedRows,
+    (newValue) => {
+      emits('update:selectedRows', Array.from(newValue))
+    },
+    {
+      deep: true
+    }
+)
+
+const areAllRowsSelected = computed(() => {
+  if (tableData.value.length === 0) return false
+  return tableData.value.every((item) => tableSelectedRows.value.has(item.id))
+})
+
+const areSomeRowsSelected = computed(() => {
+  if (tableData.value.length === 0) return false
+
+  const hasSelected = tableData.value.some((item) => tableSelectedRows.value.has(item.id))
+  return hasSelected && !areAllRowsSelected.value
+})
+
+const toggleSelectAll = (e: Event) => {
+  const isChecked = (e.target as HTMLInputElement).checked
+
+  if (isChecked) {
+    // Select all rows in the current view
+    const newSelectedRows = new Set(tableSelectedRows.value)
+    tableData.value.forEach((item) => {
+      newSelectedRows.add(item.id)
+    })
+    tableSelectedRows.value = newSelectedRows
+  } else {
+    // Deselect all rows in the current view
+    const newSelectedRows = new Set(tableSelectedRows.value)
+    tableData.value.forEach((item) => {
+      newSelectedRows.delete(item.id)
+    })
+    tableSelectedRows.value = newSelectedRows
+  }
+}
+
 </script>
 
 <template>
@@ -213,7 +262,31 @@ const reorderData = () => {
     <div class="overflow-x-auto">
       <table  class="w-full">
         <thead>
+        <tr>
+          <th :colspan="`${columns?.length! + 2}`" class="p-0">
+            <div
+                v-if="multiSelect && Array.from(tableSelectedRows).length"
+                class="bg-tableHeader flex items-center justify-between p-3 border-b border-black/10 rounded-tr-md rounded-tl-md"
+            >
+              <p class="text-sm text-black/60">
+                {{ Array.from(tableSelectedRows).length }} item(s) selected.
+              </p>
+              <div class="sticky end-0 pe-2">
+                <slot name="rowsSelectedActions"></slot>
+              </div>
+            </div>
+          </th>
+        </tr>
           <tr class="bg-tableHeader transition-all duration-500 ">
+            <th class="bg-tableHeader transition-all duration-500" v-if="multiSelect">
+              <input
+                  class="w-5 h-5 rounded-[4px] text-primary-700 focus:ring-transparent checked:ring-transparent checked:outline-none outline-none border-black/20 checked:bg-none bg-white/60"
+                  type="checkbox"
+                  :indeterminate="areSomeRowsSelected"
+                  @change="toggleSelectAll"
+                  :checked="areAllRowsSelected"
+              />
+            </th>
             <th v-for="(column, index) in columns" :key="index">
               <div class="flex w-full items-center gap-[0.315rem]">
               <span class="cursor-pointer" @click="handleSort(column.ordering ? column.ordering : column.key)">
@@ -297,7 +370,17 @@ const reorderData = () => {
 
             <tr :class="['whitespace-nowrap', { 'cursor-all-scroll': sortable }]">
               <td
+                  v-if="multiSelect"
+                  class="duration-300"
+                  :class="{ 'bg-black/5': tableSelectedRows?.has(element.id) }"
+              >
+                <RowSelect :element="element" v-model="tableSelectedRows" />
+
+              </td>
+
+              <td
                 class="duration-300 max-w-[250px] py-6"
+                :class="{ 'bg-black/5': tableSelectedRows?.has(element.id) }"
                 v-for="column in columns"
                 :key="column.key"
             >
@@ -370,11 +453,15 @@ const reorderData = () => {
                 </div>
               </slot>
             </td>
-              <td v-if="showActionIcons">
+
+              <td v-if="showActionIcons"
+                  :class="{ 'bg-black/5': tableSelectedRows?.has(element.id) }"
+              >
                 <slot name="actions" v-bind="element"></slot>
               </td>
               <td v-else-if="actions?.length"
                   class="end-0"
+                  :class="{ 'bg-black/5': tableSelectedRows?.has(element.id) }"
               >
                 <Menu as="div">
                   <MenuButton

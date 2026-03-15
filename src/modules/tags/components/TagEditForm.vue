@@ -13,7 +13,7 @@ const emit = defineEmits(['close']);
 
 const props = defineProps<{
     id: string
-  methodMode: 'add' | 'edit' | 'view'
+  methodMode: string
 }>()
 
 
