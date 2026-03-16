@@ -12,12 +12,15 @@ import IconButton from "@/components/buttons/IconButton.vue";
 import ProductAddForm from "@/modules/products/components/ProductAddForm.vue";
 import MainModal from "@/components/UI/modals/MainModal.vue";
 import ProductEditForm from "@/modules/products/components/ProductEditForm.vue";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n();
 const filters = ref({
   title: "",
   active: "",
   category: "",
   sub_categories: "",
+  test: "",
 });
 const { fields } = useProductsFields()
 const visibleAddForm = ref(false);
@@ -55,7 +58,7 @@ const visibleEditProduct = (id: string, method: string) => {
   </MainModal>
 
   <MainDataTable
-      title="sidebar.products"
+      :title="t('sidebar.products')"
       :columns="fields"
       list-url="product"
       :url-params="filters"

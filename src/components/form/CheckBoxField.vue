@@ -2,11 +2,11 @@
   <div>
     <label class="flex items-center gap-2 cursor-pointer">
       <checkbox
-        v-model="value"
-        :binary="binary"
-        :input-id="name"
-        v-bind="$attrs"
-        :class="{ 'is-invalid': errorMessage }"
+          v-model="internalValue"
+          :binary="binary"
+          :input-id="name"
+          v-bind="$attrs"
+          :class="{ 'is-invalid': errorMessage }"
       />
       <span
           class="flex gap-1 items-center leading-normal text-black/80 font-medium"
@@ -17,11 +17,11 @@
         </span>
       </span>
     </label>
-    <div class="min-h-8 py-2 min-w[1px] overflow-hidden">
+    <div v-if="name" class="min-h-8 py-2 min-w[1px] overflow-hidden">
       <Transition name="error" mode="out-in">
         <span
-          v-if="errorMessage"
-          class="text-errors-100 block font-normal text-sm leading-4 break-all text-wrap hyphens-auto"
+            v-if="errorMessage"
+            class="text-errors-100 block font-normal text-sm leading-4 break-all text-wrap hyphens-auto"
         >
           {{ errorMessage }}
         </span>
@@ -29,27 +29,35 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+import {computed, ref} from 'vue'
 import { useField } from 'vee-validate'
 
-defineOptions({
-  inheritAttrs: false
-})
+// I Make this component like this, because I am using as selectBox in MainTable
+
 const props = defineProps({
-  name: {
-    type: String,
-    required: true
-  },
-  label: {
-    type: String,
-    required: false
-  },
-  binary: {
-    type: Boolean,
-    required: false,
-    default: true
-  }
+  name: { type: String, required: false }, // Make name optional
+  modelValue: { type: null },            // Support v-model
+  label: { type: String },
+  binary: { type: Boolean, default: true }
 })
 
-const { value, errorMessage } = useField(() => props.name, undefined)
+const emit = defineEmits(['update:modelValue'])
+
+// If 'name' is found, use VeeValidate. Otherwise, use v-model
+const { value: veeValue, errorMessage } = props.name
+    ? useField(() => props.name!)
+    : { value: ref(null), errorMessage: ref(null) };
+
+const internalValue = computed({
+  get: () => (props.name ? veeValue.value : props.modelValue),
+  set: (val) => {
+    if (props.name) {
+      veeValue.value = val
+    } else {
+      emit('update:modelValue', val)
+    }
+  }
+})
 </script>

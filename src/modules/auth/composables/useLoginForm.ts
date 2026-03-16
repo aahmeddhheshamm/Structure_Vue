@@ -50,7 +50,6 @@ export function useLoginForm() {
         onSuccess: (res) => {
             authStore.setToken(res?.data.token)
             authStore.setUserData(res?.data)
-            // authStore.setRolesPermissions(res.data?.permissions || [])
             router.push({name: 'admin-panel'})
         }
       }

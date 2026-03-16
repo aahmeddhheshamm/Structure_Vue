@@ -1,7 +1,3 @@
-// import {
-//     apiLogin,
-//
-// } from "@/modules/auth/api";
 import { defineStore } from "pinia";
 import type {UserDataResponse} from "@/types/UserData.ts";
 
@@ -38,19 +34,6 @@ export const useAuthStore = defineStore("auth", {
             this.userData = user;
             this.isAuthenticated = true;
         },
-
-
-        // async getProfile() {
-        //     try {
-        //         const response = await getUserData();
-        //
-        //         this.setUserData(response);
-        //
-        //         return response;
-        //     } catch (e) {
-        //         throw e;
-        //     }
-        // },
 
         async logout() {
             try {

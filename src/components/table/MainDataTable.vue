@@ -10,6 +10,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import SpinnerLoading from "@/components/UI/SpinnerLoading.vue";
 import TablePagination from "@/components/table/TablePagination.vue";
 import RowSelect from "@/components/table/RowSelect.vue";
+import CheckBoxField from "@/components/form/CheckBoxField.vue";
 
 /* ===================== EMITS ===================== */
 
@@ -183,7 +184,8 @@ const reorderData = () => {
   )
 }
 
-// SelectBox of Row or Select All
+/* ===================== SelectBox of Row or Select All ===================== */
+
 const tableSelectedRows = ref(new Set<number>())
 watch(
     tableSelectedRows,
@@ -207,24 +209,14 @@ const areSomeRowsSelected = computed(() => {
   return hasSelected && !areAllRowsSelected.value
 })
 
-const toggleSelectAll = (e: Event) => {
-  const isChecked = (e.target as HTMLInputElement).checked
-
+const toggleSelectAll = (isChecked: boolean) => {
+  const newSelectedRows = new Set(tableSelectedRows.value)
   if (isChecked) {
-    // Select all rows in the current view
-    const newSelectedRows = new Set(tableSelectedRows.value)
-    tableData.value.forEach((item) => {
-      newSelectedRows.add(item.id)
-    })
-    tableSelectedRows.value = newSelectedRows
+    tableData.value.forEach((item) => newSelectedRows.add(item.id))
   } else {
-    // Deselect all rows in the current view
-    const newSelectedRows = new Set(tableSelectedRows.value)
-    tableData.value.forEach((item) => {
-      newSelectedRows.delete(item.id)
-    })
-    tableSelectedRows.value = newSelectedRows
+    tableData.value.forEach((item) => newSelectedRows.delete(item.id))
   }
+  tableSelectedRows.value = newSelectedRows
 }
 
 </script>
@@ -277,14 +269,12 @@ const toggleSelectAll = (e: Event) => {
             </div>
           </th>
         </tr>
-          <tr class="bg-tableHeader transition-all duration-500 ">
-            <th class="bg-tableHeader transition-all duration-500" v-if="multiSelect">
-              <input
-                  class="w-5 h-5 rounded-[4px] text-primary-700 focus:ring-transparent checked:ring-transparent checked:outline-none outline-none border-black/20 checked:bg-none bg-white/60"
-                  type="checkbox"
+          <tr class="bg-tableHeader transition-all duration-500">
+            <th class="bg-tableHeader" v-if="multiSelect">
+              <CheckBoxField
+                  :model-value="areAllRowsSelected"
                   :indeterminate="areSomeRowsSelected"
-                  @change="toggleSelectAll"
-                  :checked="areAllRowsSelected"
+                  @update:model-value="toggleSelectAll"
               />
             </th>
             <th v-for="(column, index) in columns" :key="index">

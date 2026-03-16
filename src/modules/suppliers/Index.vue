@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import MainDataTable from "@/components/table/MainDataTable.vue";
 import useSuppliersFields from "@/modules/suppliers/composables/useSuppliersFields.ts";
+import {useI18n} from "vue-i18n";
+const { t } = useI18n();
 
 const { fields, actions, sampleData } = useSuppliersFields()
 
@@ -8,7 +10,7 @@ const { fields, actions, sampleData } = useSuppliersFields()
 
 <template>
   <MainDataTable
-      title="sidebar.suppliers"
+      :title="t('sidebar.suppliers')"
       :columns="fields"
       :items="sampleData"
       :actions="actions"

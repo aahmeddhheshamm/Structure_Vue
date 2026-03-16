@@ -13,9 +13,10 @@ const { t } = useLocaleSettings();
 defineProps<{
   filters: {
     title: string
-    active: string
+    active: boolean
     category: string
     sub_categories: string
+    test: boolean
   }
 }>()
 
@@ -23,9 +24,10 @@ const { values, resetForm } = useForm({
   keepValuesOnUnmount: true,
   initialValues: {
     title: "",
-    active: "",
+    active: false,
     category: "",
     sub_categories: "",
+    test: false,
   }
 })
 
@@ -41,7 +43,7 @@ const emit = defineEmits(['update:filters', 'hide'])
 watchEffect(() => {
   emit('update:filters', { ...values })
 });
-const test =ref()
+// const test =ref()
 </script>
 
 <template>
@@ -72,19 +74,19 @@ const test =ref()
         optionValue="value"
         placeholder="Select Sub Categories"
     />
-<!--    <CheckBoxField-->
-<!--        name="test"-->
-<!--        :binary="true"-->
-<!--        label="test"-->
-<!--    />-->
-
-    <DatePickerField
+    <CheckBoxField
         name="test"
-        showIcon
-        fluid
-        dateFormat="dd/mm/yy"
-        :placeholder="$t('fields.selectDate')"
+        :binary="true"
+        label="test"
     />
+
+<!--    <DatePickerField-->
+<!--        name="test"-->
+<!--        showIcon-->
+<!--        fluid-->
+<!--        dateFormat="dd/mm/yy"-->
+<!--        :placeholder="$t('fields.selectDate')"-->
+<!--    />-->
     <ClearFilters
         class="self-start mb-1"
         v-if="values.title || values.active || values.category || values.sub_categories"

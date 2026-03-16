@@ -1,7 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps({
+  tooltipValue: { type: String, required: false, default: null },
+
+})
+</script>
 
 <template>
-  <button type="button" class="rounded-button bg-primary-50" @click="$emit('action')">
+  <button v-tooltip.top="{ value: tooltipValue }" type="button" class="rounded-button bg-primary-50" @click="$emit('action')">
     <slot />
   </button>
 </template>
